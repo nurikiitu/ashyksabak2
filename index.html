@@ -372,20 +372,20 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:950}
 
 <!-- ================= T. TECH (48) ================= -->
 <section class="screen" id="tech">
-  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>💻 T · 48-жаттығу: сөздерді салыстыр</h2><span class="chip ghost" id="techcnt">0 / 14</span></div>
+  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>💻 T · 48-жаттығу: Л, Р қай жерде кездеседі?</h2><span class="chip ghost" id="techcnt">0 / 14</span></div>
   <div class="stage">
     <div class="factory" id="techfac">
-      <div class="bin k" id="tbinL"><div class="bl">Л, Р-дан<br>басталады</div><div class="bitems"></div></div>
+      <div class="bin k" id="tbinL"><div class="bl">Сөздің<br>басында</div><div class="bitems"></div></div>
       <div class="rob" id="trob">
         <div class="siren" id="tsiren"></div>
         <div class="rhead"><div class="rscreen" id="tscreen">🙂</div></div>
         <div class="arm" id="tarm"><div class="claw"></div><div class="held" id="theld"></div></div>
         <div class="rbody">⚙️</div>
       </div>
-      <div class="bin n" id="tbinI"><div class="bl">Ы, І-ден<br>басталады</div><div class="bitems"></div></div>
+      <div class="bin n" id="tbinI"><div class="bl">Сөздің<br>ортасында</div><div class="bitems"></div></div>
     </div>
     <div class="belt" id="tbeltwrap"><div class="belttrack" id="tbelt"></div></div>
-    <div class="rbtns" id="tbtns"><button class="rb k" id="tbL">Л / Р ⬅</button><button class="rb n" id="tbI">➡ Ы / І</button></div>
+    <div class="rbtns" id="tbtns"><button class="rb k" id="tbL">⬅ Басында</button><button class="rb n" id="tbI">Ортасында ➡</button></div>
     <div class="task" id="techtask" style="display:none;--c:#636e72"></div>
   </div>
   <div class="fin" id="techfin"></div>
@@ -578,7 +578,7 @@ function startTech(){show('tech');const id=RID;$('#techfin').classList.remove('o
     const c=cards[i];const bw=belt.parentElement.clientWidth;belt.style.transform=`translateX(${bw/2-(c.offsetLeft+c.offsetWidth/2)}px)`;busy=false;sc.textContent='🤔';sc.className='rscreen'}
   function answer(k){if(busy||RID!==id||i>=items.length)return;const c=cards[i];busy=true;
     if(k!==c.dataset.k){E.n++;sfx.bad();sc.textContent='ҚАТЕ!';sc.className='rscreen err';$('#tsiren').classList.add('on');re($('#trob'),'shake');
-      toast('Сөздің бірінші әрпіне қара!','bad');setTimeout(()=>{$('#tsiren').classList.remove('on');busy=false;sc.textContent='🤔';sc.className='rscreen'},1100);return}
+      toast('Л, Р әрпін тауып, қай жерде тұрғанына қара!','bad');setTimeout(()=>{$('#tsiren').classList.remove('on');busy=false;sc.textContent='🤔';sc.className='rscreen'},1100);return}
     sfx.ok();$('#tsiren').className='siren ok';sc.textContent='😃';
     setTimeout(()=>{if(RID!==id)return;const h=c.cloneNode(true);h.classList.remove('cur');$('#theld').innerHTML='';$('#theld').append(h);c.style.visibility='hidden';sfx.tap();
       arm.style.transform=`translateX(-50%) rotate(${k==='L'?62:-62}deg)`;
@@ -587,9 +587,9 @@ function startTech(){show('tech');const id=RID;$('#techfin').classList.remove('o
   $('#tbL').onclick=()=>answer('L');$('#tbI').onclick=()=>answer('I');
   document.onkeydown=e=>{if(!$('#tech').classList.contains('on'))return;if(e.key==='ArrowLeft')answer('L');if(e.key==='ArrowRight')answer('I')};
   function step2(){if(RID!==id)return;['tbeltwrap','tbtns'].forEach(x=>$('#'+x).style.display='none');$('#techfac').style.display='none';const T=$('#techtask');T.style.display='flex';
-    const ok='Қазақ сөздері Л, Р әрпінен басталмайды: алдына Ы, І дыбысы қосылады (ілгіш, ірі). Л, Р-дан басталатын сөздер (рақмет, лағыл) – басқа тілден енген сөздер.';
-    const ops=shuffle([ok,'Л мен Р әріптері сөздің тек соңында ғана жазылады.','Ы, І-ден басталатын сөздердің бәрі – басқа тілден енген сөздер.']);
-    T.innerHTML=`<div class="cols48"><div><b>Л, Р-дан басталады</b>${W48L.map(lrColor).join(', ')}</div><div><b>Ы, І-ден басталады</b>${W48I.map(lrColor).join(', ')}</div></div><div class="tq">🤔 Екі бағанды салыстыр. Қандай қорытынды жасайсың?</div><div class="mopts">${ops.map(o=>`<button class="wt">${o}</button>`).join('')}</div>`;
+    const ok='Бірінші бағандағы сөздерде Л, Р әрпі сөздің басында, ал екінші бағандағы сөздерде сөздің ортасында кездеседі. Қазақ сөздерінде Л, Р басында келсе, алдынан Ы, І жазылады (ілгіш, ірі).';
+    const ops=shuffle([ok,'Екі бағанда да Л, Р әрпі сөздің басында тұр.','Л, Р әріптері тек сөздің соңында ғана кездеседі.']);
+    T.innerHTML=`<div class="cols48"><div><b>Л, Р – сөздің басында</b>${W48L.map(lrColor).join(', ')}</div><div><b>Л, Р – сөздің ортасында</b>${W48I.map(lrColor).join(', ')}</div></div><div class="tq">🤔 Екі бағанды салыстыр. Л, Р әріптері қай жерде кездеседі?</div><div class="mopts">${ops.map(o=>`<button class="wt">${o}</button>`).join('')}</div>`;
     T.querySelectorAll('.mopts .wt').forEach(b=>b.onclick=()=>{if(b.textContent!==ok){E.n++;sfx.bad();b.classList.add('nom');re(b,'shake');return}
       b.classList.add('okm');sfx.ok();DONE.add('tech');setTimeout(()=>finBox('#techfin',{icon:'💻',title:'Қорытынды жасалды!',text:'',err:E.n,again:startTech,extra:`<div class="story"><b>📌 Ереже</b>${ok}</div>`}),900)})}
   setTimeout(feed,100)}
