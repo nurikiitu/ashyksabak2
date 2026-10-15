@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Сөздер қалашығына саяхат</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1d2340;--cream:#fff6e4;--red:#e8483f;--blue:#2f6fe4;--gold:#ffc83d;--green:#2fae5b;--paper:#fdf3dc}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:'Nunito',system-ui,sans-serif;color:var(--ink);background:#14213d;overflow-x:hidden;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+button{font-family:inherit;border:none;cursor:pointer;color:inherit}
+.screen{display:none;min-height:100vh;position:relative;flex-direction:column}
+.screen.on{display:flex}
+/* ---------- top bar ---------- */
+.bar{display:flex;align-items:center;gap:12px;padding:14px 20px 6px;position:relative;z-index:20}
+.bar h2{flex:1;text-align:center;color:#fff;font-size:clamp(22px,2.6vw,40px);font-weight:900;text-shadow:0 3px 0 rgba(0,0,0,.35);letter-spacing:.5px}
+.chip{background:var(--cream);border-radius:999px;padding:10px 20px;font-weight:900;font-size:clamp(15px,1.4vw,22px);box-shadow:0 5px 0 rgba(0,0,0,.25);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.chip:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.chip.ghost{background:rgba(255,255,255,.14);color:#fff;box-shadow:none;border:2px solid rgba(255,255,255,.35)}
+/* ---------- MAP ---------- */
+#map{background:radial-gradient(ellipse at 50% 0%,#ffe9b8 0%,#f9d38a 40%,#e8b26a 100%)}
+#map::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(120,72,20,.10) 1.2px,transparent 1.3px);background-size:18px 18px;pointer-events:none}
+.mapttl{text-align:center;padding:22px 16px 4px;position:relative;z-index:2}
+.ribbon{display:inline-block;position:relative;background:var(--red);color:#fff;font-size:clamp(26px,3.6vw,58px);font-weight:900;padding:10px 46px 14px;border-radius:10px;box-shadow:0 8px 0 #a92b25;transform:rotate(-1.2deg)}
+.ribbon::before,.ribbon::after{content:'';position:absolute;top:18px;width:46px;height:100%;background:#c23a32;z-index:-1}
+.ribbon::before{left:-30px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,22% 50%)}
+.ribbon::after{right:-30px;clip-path:polygon(0 0,100% 0,78% 50%,100% 100%,0 100%)}
+.mapsub{margin-top:14px;font-weight:900;font-size:clamp(15px,1.6vw,24px);color:#7a4a12}
+.mapbox{position:relative;width:min(96vw,calc((100vh - 190px)*1.9));aspect-ratio:1.9;margin:6px auto 18px}
+.mapbox svg.road{position:absolute;inset:0;width:100%;height:100%}
+.stop{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;background:none;z-index:3}
+.stop .disc{width:clamp(84px,9.4vw,150px);height:clamp(84px,9.4vw,150px);border-radius:50%;display:grid;place-items:center;font-size:clamp(42px,4.8vw,78px);background:#fff;border:7px solid var(--c);box-shadow:0 9px 0 rgba(0,0,0,.25),inset 0 -10px 0 rgba(0,0,0,.06);position:relative;transition:transform .2s}
+.stop:hover .disc{transform:scale(1.07) rotate(-3deg)}
+.stop .num{position:absolute;top:-10px;left:-10px;width:clamp(30px,3vw,46px);height:clamp(30px,3vw,46px);border-radius:50%;background:var(--c);color:#fff;font-weight:900;display:grid;place-items:center;font-size:clamp(16px,1.6vw,26px);border:4px solid #fff}
+.stop .lab{background:var(--ink);color:#fff;border-radius:14px;padding:6px 14px;font-weight:900;font-size:clamp(13px,1.3vw,21px);white-space:nowrap;box-shadow:0 4px 0 rgba(0,0,0,.3)}
+.stop .lab small{display:block;font-size:.72em;opacity:.75;text-align:center}
+.stop.done .disc::after{content:'✓';position:absolute;right:-12px;bottom:-6px;width:42px;height:42px;border-radius:50%;background:var(--green);color:#fff;font-size:28px;display:grid;place-items:center;border:4px solid #fff}
+.stop.special .disc{border-style:dashed;animation:glow 2s infinite alternate}
+@keyframes glow{to{box-shadow:0 9px 0 rgba(0,0,0,.25),0 0 0 14px rgba(255,200,61,.45)}}
+.bus{position:absolute;font-size:clamp(40px,4.4vw,70px);transform:translate(-50%,-80%) scaleX(-1);transition:left 1s ease-in-out,top 1s ease-in-out;z-index:4;filter:drop-shadow(0 6px 0 rgba(0,0,0,.2))}
+.deco{position:absolute;font-size:clamp(26px,3vw,48px);opacity:.9;z-index:1}
+.mapfoot{position:absolute;right:18px;top:18px;z-index:5;display:flex;gap:10px}
+/* ---------- shared game bits ---------- */
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:14px;padding:6px 18px 18px;position:relative}
+.card{background:#fff;border-radius:20px;padding:10px 22px;font-weight:900;font-size:clamp(24px,2.5vw,40px);box-shadow:0 7px 0 rgba(0,0,0,.25);display:flex;align-items:center;gap:10px;cursor:grab;touch-action:none;white-space:nowrap;position:relative}
+.card .e{font-size:1.35em}
+.card.sel{outline:6px solid var(--gold);transform:scale(1.06)}
+.card.drag{opacity:.25}
+.ghostcard{position:fixed;z-index:999;pointer-events:none;transform:translate(-50%,-50%) rotate(-4deg) scale(1.1);box-shadow:0 18px 30px rgba(0,0,0,.35)}
+.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-12px)}40%,80%{transform:translateX(12px)}}
+.pop{animation:pop .45s}
+@keyframes pop{0%{transform:scale(.4)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.hint{color:#fff;font-weight:800;font-size:clamp(15px,1.4vw,22px);opacity:.85;text-align:center}
+#toast{position:fixed;left:50%;top:16%;transform:translate(-50%,-20px);background:var(--ink);color:#fff;font-weight:900;font-size:clamp(22px,2.4vw,40px);padding:14px 30px;border-radius:20px;opacity:0;pointer-events:none;transition:.25s;z-index:900;border:4px solid #fff}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+#toast.good{background:var(--green)}#toast.bad{background:var(--red)}
+canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:950}
+/* final overlay */
+.fin{position:absolute;inset:0;background:rgba(10,14,30,.6);display:none;align-items:center;justify-content:center;z-index:60;backdrop-filter:blur(3px)}
+.fin.on{display:flex}
+.finbox{background:var(--cream);border-radius:36px;padding:30px 46px;text-align:center;max-width:min(860px,94vw);border:8px solid var(--gold);box-shadow:0 14px 0 rgba(0,0,0,.3)}
+.finbox .big{font-size:clamp(60px,7vw,110px);line-height:1}
+.finbox h3{font-size:clamp(30px,3.6vw,56px);font-weight:900;margin:6px 0}
+.finbox p{font-size:clamp(18px,1.9vw,30px);font-weight:800;margin:6px 0 18px}
+.finbox .row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.finbox .chip{background:var(--blue);color:#fff}.finbox .chip.alt{background:var(--green)}
+.errs{color:var(--red)}.errs.zero{color:var(--green)}
+/* ---------- 1. LAB ---------- */
+#lab{background:linear-gradient(180deg,#0f3b47 0%,#145664 55%,#0c2e38 100%)}
+#lab::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 2px,transparent 2px 80px),repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 2px,transparent 2px 80px);pointer-events:none}
+.shelf{position:absolute;left:0;right:0;bottom:0;height:16%;background:linear-gradient(#8a5a2b,#5d3a19);border-top:10px solid #a8743d}
+.pipe{width:clamp(120px,12vw,190px);height:clamp(40px,5vh,64px);background:linear-gradient(90deg,#9aa6b2,#e6edf3,#9aa6b2);border-radius:0 0 26px 26px;box-shadow:0 6px 0 rgba(0,0,0,.25);position:relative}
+.pipe::after{content:'';position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);width:50%;height:10px;background:#5c6873;border-radius:0 0 8px 8px}
+.labrow{display:flex;justify-content:space-around;align-items:flex-end;width:100%;max-width:1500px;flex:1;position:relative;z-index:2;padding-bottom:3vh}
+.flask{position:relative;width:clamp(200px,22vw,340px);display:flex;flex-direction:column;align-items:center;gap:10px}
+.flask svg{width:100%;height:auto;filter:drop-shadow(0 12px 0 rgba(0,0,0,.25));overflow:visible}
+.flask .tag{background:var(--c);color:#fff;font-weight:900;font-size:clamp(28px,3vw,48px);padding:6px 26px;border-radius:16px;box-shadow:0 6px 0 rgba(0,0,0,.3);border:4px solid #fff}
+.flask .tag small{display:block;font-size:.45em;opacity:.9}
+.flask.over svg{transform:scale(1.05)}
+.liq{transition:transform .8s cubic-bezier(.3,1.5,.5,1)}
+.bub{animation:bub 2.4s infinite ease-in}
+@keyframes bub{0%{transform:translateY(0);opacity:0}15%{opacity:.9}100%{transform:translateY(-140px);opacity:0}}
+.puff{position:absolute;left:50%;top:0;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,#cfd8dc,#78909c);opacity:0;pointer-events:none}
+.puff.go{animation:puff .9s ease-out}
+@keyframes puff{0%{opacity:.95;transform:translate(-50%,10px) scale(.3)}100%{opacity:0;transform:translate(-50%,-110px) scale(2.4)}}
+.dispense{min-height:clamp(90px,12vh,130px);display:flex;align-items:flex-start;justify-content:center;position:relative;z-index:5}
+.dispense .card{animation:drop .6s cubic-bezier(.3,1.6,.5,1)}
+@keyframes drop{0%{transform:translateY(-90px) scale(.6);opacity:0}100%{transform:none;opacity:1}}
+.labcount{color:#b2fff4;font-weight:900;font-size:clamp(18px,1.8vw,28px)}
+.question{background:var(--cream);border-radius:26px;padding:20px 34px;font-weight:900;font-size:clamp(22px,2.4vw,38px);text-align:center;border:6px dashed var(--gold);max-width:1200px}
+/* ---------- 2. TOWN ---------- */
+#town{background:linear-gradient(180deg,#0b1030 0%,#1f2a63 60%,#3b3f7a 100%);transition:background 1.5s;overflow:hidden}
+#town.lit{background:linear-gradient(180deg,#1b2a6b 0%,#5a4ea8 55%,#f29a6b 100%)}
+.stars i{position:absolute;width:3px;height:3px;background:#fff;border-radius:50%;opacity:.5}
+#town.lit .stars i{animation:tw 1.6s infinite alternate}
+@keyframes tw{to{opacity:1;transform:scale(1.8)}}
+.moon{position:absolute;right:7%;top:12%;width:clamp(60px,7vw,110px);aspect-ratio:1;border-radius:50%;background:#fff6c9;box-shadow:0 0 40px #fff6c9;opacity:.35;transition:opacity 1.5s}
+#town.lit .moon{opacity:1}
+.street{position:absolute;left:0;right:0;bottom:0;height:20%;background:#2b2b38;border-top:10px solid #4a4a5c}
+.street::after{content:'';position:absolute;left:0;right:0;top:45%;border-top:8px dashed #c9c9d6;opacity:.6}
+.houses{display:flex;justify-content:center;gap:clamp(30px,8vw,180px);align-items:flex-end;flex:1;width:100%;position:relative;z-index:3;padding-bottom:8vh}
+.house{position:relative;width:clamp(230px,24vw,380px);display:flex;flex-direction:column;align-items:center;transition:transform .2s}
+.house.over{transform:scale(1.04)}
+.roof{width:118%;height:clamp(80px,9vw,140px);background:var(--c);clip-path:polygon(50% 0,100% 100%,0 100%);position:relative}
+.roof b{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);color:#fff;font-size:clamp(26px,2.8vw,44px);font-weight:900;text-shadow:0 3px 0 rgba(0,0,0,.3)}
+.chim{position:absolute;right:22%;top:-10px;width:clamp(22px,2.4vw,36px);height:clamp(50px,5vw,80px);background:#6d4c41;z-index:-1}
+.smoke{position:absolute;right:21%;top:-40px;font-size:30px;opacity:0}
+#town.lit .smoke{animation:smoke 2.6s infinite}
+@keyframes smoke{0%{opacity:0;transform:translateY(20px) scale(.6)}30%{opacity:.8}100%{opacity:0;transform:translate(-20px,-60px) scale(1.6)}}
+.hbody{width:100%;background:var(--w);padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:14px;border-radius:0 0 10px 10px;box-shadow:0 10px 0 rgba(0,0,0,.3)}
+.win{aspect-ratio:1.15;background:#1a2147;border:6px solid #f2e3c6;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:background .5s,box-shadow .5s;overflow:hidden}
+.win .we{font-size:clamp(26px,2.8vw,46px);line-height:1;opacity:0;transform:scale(.3);transition:.5s}
+.win .ww{font-size:clamp(12px,1.15vw,19px);font-weight:900;opacity:0;transition:.5s .2s;white-space:nowrap}
+.win.on{background:radial-gradient(circle,#fff3b0,#ffcc4d);box-shadow:0 0 26px #ffd75e}
+.win.on .we,.win.on .ww{opacity:1;transform:none}
+.door{grid-column:span 2;height:clamp(40px,4vw,64px);width:30%;margin:0 auto;background:#7a4b2a;border-radius:12px 12px 0 0}
+.lamp{position:absolute;bottom:20%;width:10px;height:clamp(120px,16vh,190px);background:#3d3d4e;z-index:2}
+.lamp::before{content:'';position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:30px;height:24px;border-radius:8px 8px 4px 4px;background:#565670;transition:.6s}
+#town.lit .lamp::before{background:#ffe27a;box-shadow:0 0 50px 18px rgba(255,226,122,.6)}
+.tray{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:1500px;position:relative;z-index:6;padding:8px;min-height:80px}
+.tray .card{font-size:clamp(20px,2vw,32px);padding:8px 16px}
+/* ---------- 3. DETECTIVE ---------- */
+#det{background:#3a2a1f;background-image:radial-gradient(rgba(255,255,255,.04) 2px,transparent 2px),radial-gradient(rgba(0,0,0,.25) 2px,transparent 2px);background-size:22px 22px,30px 30px;background-position:0 0,11px 11px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.tab{background:#c9a26b;color:#3a2a1f;font-weight:900;font-size:clamp(15px,1.4vw,22px);padding:8px 18px;border-radius:12px 12px 4px 4px;box-shadow:0 4px 0 rgba(0,0,0,.35)}
+.tab.on{background:var(--paper);transform:translateY(-4px)}
+.desk{display:flex;gap:26px;width:100%;max-width:1700px;flex:1;align-items:flex-start;justify-content:center}
+.paper{background:var(--paper);border-radius:6px;padding:clamp(20px,3vw,46px) clamp(22px,3.4vw,56px);box-shadow:0 14px 30px rgba(0,0,0,.45);transform:rotate(-1deg);position:relative;flex:1;max-width:1100px;cursor:none}
+.paper::before{content:'📌';position:absolute;top:-22px;left:50%;font-size:40px;transform:translateX(-50%)}
+.paper h4{font-size:clamp(18px,1.7vw,26px);color:#8b5e34;letter-spacing:3px;margin-bottom:10px;text-align:center}
+.ptext{font-size:clamp(28px,3vw,50px);font-weight:800;line-height:1.75;color:#2b2016}
+.wd{position:relative;display:inline-block;padding:0 4px;border-radius:8px;cursor:none;transition:background .2s}
+.wd:hover{background:rgba(255,200,61,.35)}
+.wd.found{background:rgba(232,72,63,.12)}
+.stamp{position:absolute;left:50%;top:-12px;transform:translate(-50%,-50%) rotate(-12deg);font-size:clamp(11px,1vw,16px);font-weight:900;color:var(--red);border:3px solid var(--red);border-radius:6px;padding:0 6px;background:rgba(253,243,220,.85);white-space:nowrap;animation:stamp .35s cubic-bezier(.3,1.6,.5,1)}
+.stamp.k{color:#c62828;border-color:#c62828}.stamp.n{color:#1565c0;border-color:#1565c0}
+@keyframes stamp{0%{transform:translate(-50%,-50%) rotate(-12deg) scale(3);opacity:0}100%{opacity:1}}
+.lens{position:fixed;width:120px;height:120px;border-radius:50%;border:8px solid #4e342e;box-shadow:0 0 0 4px #a1887f,inset 0 0 30px rgba(255,255,255,.6);pointer-events:none;z-index:50;transform:translate(-50%,-50%);display:none;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.35),rgba(255,255,255,.05))}
+.lens::after{content:'';position:absolute;right:-46px;bottom:-46px;width:56px;height:16px;background:#4e342e;border-radius:8px;transform:rotate(45deg)}
+.ask{position:absolute;z-index:40;background:#fff;border-radius:18px;padding:10px;display:flex;gap:10px;box-shadow:0 10px 24px rgba(0,0,0,.4);transform:translate(-50%,10px)}
+.ask button{font-size:clamp(20px,2vw,32px);font-weight:900;padding:8px 18px;border-radius:12px;color:#fff}
+.ask .k{background:var(--red)}.ask .n{background:var(--blue)}
+.folder{width:clamp(220px,22vw,360px);background:#d9a441;border-radius:6px 18px 18px 18px;padding:18px;box-shadow:0 14px 30px rgba(0,0,0,.45);position:relative;align-self:stretch;max-height:72vh;display:flex;flex-direction:column}
+.folder::before{content:'ІС №7';position:absolute;top:-26px;left:0;background:#d9a441;padding:4px 16px;border-radius:10px 10px 0 0;font-weight:900;color:#5a3d10}
+.folder h5{font-size:clamp(17px,1.6vw,24px);color:#5a3d10;font-weight:900;margin-bottom:8px}
+.ev{display:flex;flex-wrap:wrap;gap:8px;overflow:auto;align-content:flex-start}
+.evc{background:#fffaf0;border-radius:6px;padding:4px 10px;font-weight:900;font-size:clamp(15px,1.4vw,22px);box-shadow:0 3px 0 rgba(0,0,0,.2);transform:rotate(var(--r));animation:pop .4s}
+.evc i{font-style:normal;font-size:.75em;color:#fff;border-radius:6px;padding:0 6px;margin-left:6px}
+.evc.k i{background:#c62828}.evc.n i{background:#1565c0}
+.meter{margin-top:auto;padding-top:10px;font-weight:900;color:#5a3d10;font-size:clamp(16px,1.5vw,24px)}
+.meter .barx{height:16px;background:rgba(0,0,0,.15);border-radius:8px;overflow:hidden;margin-top:6px}.meter .barx i{display:block;height:100%;background:var(--red);transition:width .4s}
+/* ---------- 4. SCALE ---------- */
+#scale{background:linear-gradient(180deg,#fbe3c4,#f2c793);overflow:hidden}
+#scale::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(232,72,63,.13) 0 60px,rgba(255,255,255,.0) 60px 120px);height:90px;clip-path:polygon(0 0,100% 0,100% 70%,97% 100%,94% 70%,91% 100%,88% 70%,85% 100%,82% 70%,79% 100%,76% 70%,73% 100%,70% 70%,67% 100%,64% 70%,61% 100%,58% 70%,55% 100%,52% 70%,49% 100%,46% 70%,43% 100%,40% 70%,37% 100%,34% 70%,31% 100%,28% 70%,25% 100%,22% 70%,19% 100%,16% 70%,13% 100%,10% 70%,7% 100%,4% 70%,1% 100%,0 70%)}
+#scale .bar h2{color:#6b3b0d;text-shadow:none}
+.scl{position:relative;width:min(1100px,94vw);height:clamp(300px,44vh,470px)}
+.beam{position:absolute;left:50%;top:18%;width:74%;height:18px;margin-left:-37%;background:linear-gradient(#e5b453,#a8741c);border-radius:10px;transform-origin:50% 50%;transition:transform 1s cubic-bezier(.3,1.4,.5,1);box-shadow:0 5px 0 rgba(0,0,0,.2)}
+.pivot{position:absolute;left:50%;top:13%;width:46px;height:46px;margin-left:-23px;border-radius:50%;background:radial-gradient(#ffe08a,#b8860b);z-index:3;box-shadow:0 4px 0 rgba(0,0,0,.25)}
+.post{position:absolute;left:50%;top:18%;bottom:6%;width:28px;margin-left:-14px;background:linear-gradient(90deg,#a8741c,#e5b453,#a8741c);border-radius:8px}
+.base{position:absolute;left:50%;bottom:0;width:40%;margin-left:-20%;height:9%;background:linear-gradient(#a8741c,#7a520f);border-radius:20px 20px 8px 8px}
+.pan{position:absolute;width:clamp(230px,30%,330px);transform:translateX(-50%);transition:left 1s cubic-bezier(.3,1.4,.5,1),top 1s cubic-bezier(.3,1.4,.5,1);display:flex;flex-direction:column;align-items:center}
+.pan .strings{width:70%;height:clamp(70px,10vh,110px);border-left:3px solid #8a6a2a;border-right:3px solid #8a6a2a;clip-path:polygon(50% 0,100% 100%,0 100%);background:linear-gradient(transparent,transparent)}
+.pan .strings{border:none;background:linear-gradient(to bottom right,transparent 49%,#8a6a2a 49.5%,#8a6a2a 50.5%,transparent 51%) left/50% 100% no-repeat,linear-gradient(to bottom left,transparent 49%,#8a6a2a 49.5%,#8a6a2a 50.5%,transparent 51%) right/50% 100% no-repeat}
+.pan .dish{width:100%;min-height:clamp(56px,7vh,80px);background:linear-gradient(#ffd56b,#c8901f);border-radius:0 0 140px 140px/0 0 60px 60px;display:flex;flex-wrap:wrap-reverse;gap:4px;justify-content:center;align-content:flex-start;padding:4px 10px 18px;position:relative}
+.pan .wchip{background:var(--c);color:#fff;border-radius:8px;padding:2px 8px;font-weight:900;font-size:clamp(11px,1vw,16px);position:relative;top:-14px;box-shadow:0 2px 0 rgba(0,0,0,.2);animation:pop .4s}
+.pan .lbl{margin-top:8px;background:var(--c);color:#fff;font-weight:900;border-radius:14px;padding:4px 16px;font-size:clamp(18px,1.8vw,28px);box-shadow:0 4px 0 rgba(0,0,0,.25)}
+.qpanel{background:#fff;border-radius:28px;padding:16px 26px;box-shadow:0 10px 0 rgba(0,0,0,.18);display:flex;flex-direction:column;align-items:center;gap:12px;width:min(980px,94vw);border:5px solid #e8b26a}
+.qtext{font-size:clamp(24px,2.6vw,42px);font-weight:900;text-align:center}
+.choices{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.choices button{font-size:clamp(24px,2.4vw,40px);font-weight:900;padding:10px 30px;border-radius:18px;background:var(--c,#eef2ff);color:#fff;box-shadow:0 6px 0 rgba(0,0,0,.25)}
+.ansrow{display:flex;align-items:center;gap:14px;font-size:clamp(26px,2.8vw,46px);font-weight:900}
+.abox{min-width:2.6em;padding:2px 14px;border:5px solid var(--gold);border-radius:16px;text-align:center;background:#fffbe9;min-height:1.3em}
+.abox.ok{background:#c8f7c5;border-color:var(--green)}
+.pad{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;width:100%;max-width:820px}
+.pad button{height:clamp(52px,6vh,72px);border-radius:14px;background:#f3ead7;font-size:clamp(24px,2.4vw,38px);font-weight:900;box-shadow:0 5px 0 #c9b48a}
+.pad button:active{transform:translateY(3px);box-shadow:0 2px 0 #c9b48a}
+.pad .go{grid-column:span 3;background:var(--green);color:#fff;box-shadow:0 5px 0 #1d7a3e;font-size:clamp(18px,1.8vw,28px)}
+.pad .bk{background:#ffd8a8}
+.rounds{display:flex;gap:8px}.rounds i{width:18px;height:18px;border-radius:50%;background:rgba(107,59,13,.25)}.rounds i.d{background:var(--green)}.rounds i.c{background:var(--red);transform:scale(1.3)}
+/* ---------- 5. FALCON ---------- */
+#falcon{background:linear-gradient(180deg,#5fb0f0 0%,#a9dbff 55%,#e9f6ff 100%);overflow:hidden}
+.mnt{position:absolute;bottom:0;left:0;right:0;height:42%;pointer-events:none}
+.cloud{position:absolute;background:#fff;border-radius:60px;opacity:.85;animation:cl 40s linear infinite}
+.cloud::before,.cloud::after{content:'';position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:50%;height:150%;left:15%;top:-60%}.cloud::after{width:40%;height:120%;right:12%;top:-40%}
+@keyframes cl{from{transform:translateX(-30vw)}to{transform:translateX(130vw)}}
+.fl-grid{display:grid;grid-template-columns:1fr 1.5fr 1fr;grid-template-rows:auto auto;gap:14px;width:100%;max-width:1750px;flex:1;position:relative;z-index:3;align-items:start}
+.team{background:rgba(255,255,255,.85);border-radius:24px;padding:12px 16px;border:6px solid var(--c);box-shadow:0 8px 0 rgba(0,0,0,.15);display:flex;align-items:center;gap:12px;transition:transform .3s,box-shadow .3s}
+.team .ti{font-size:clamp(34px,3.4vw,56px)}
+.team .tn{font-weight:900;font-size:clamp(18px,1.9vw,30px);line-height:1.1}
+.team .tn small{display:block;font-size:.62em;opacity:.7}
+.team .fe{margin-left:auto;font-weight:900;font-size:clamp(20px,2vw,32px);background:var(--c);color:#fff;border-radius:14px;padding:2px 12px;white-space:nowrap}
+.team.act{transform:scale(1.06);box-shadow:0 0 0 8px rgba(255,200,61,.75),0 8px 0 rgba(0,0,0,.15)}
+.teams{display:flex;flex-direction:column;gap:14px}
+.bird{position:relative;display:flex;justify-content:center;align-items:center}
+.bird svg{width:100%;max-width:560px;height:auto;overflow:visible;filter:drop-shadow(0 14px 10px rgba(0,0,0,.18))}
+.bird.fly svg{animation:fly 3s ease-in forwards}
+@keyframes fly{0%{transform:none}30%{transform:translate(-20px,20px) rotate(4deg)}100%{transform:translate(60vw,-80vh) rotate(-18deg) scale(.6)}}
+.bird.fly .wing{animation:flap .25s infinite alternate}
+@keyframes flap{to{transform:rotate(-28deg)}}
+.wing{transform-origin:250px 170px}
+.fth{opacity:.13;transition:opacity .6s,fill .6s}
+.fth.on{opacity:1}
+.task{grid-column:1/-1;background:rgba(255,255,255,.93);border-radius:28px;padding:16px 24px;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:0 10px 0 rgba(0,0,0,.14);border:6px solid var(--c,#fff)}
+.task .tq{font-size:clamp(22px,2.4vw,38px);font-weight:900;text-align:center}
+.task .tq .who{color:var(--c)}
+.lword{font-size:clamp(52px,6vw,96px);font-weight:900;letter-spacing:4px}
+.lword .gap{display:inline-block;min-width:.8em;border-bottom:8px solid var(--ink);color:var(--red)}
+.lr{display:flex;gap:24px}
+.lr button{width:clamp(90px,9vw,140px);height:clamp(90px,9vw,140px);border-radius:28px;font-size:clamp(54px,5.6vw,90px);font-weight:900;color:#fff;box-shadow:0 8px 0 rgba(0,0,0,.25)}
+.lr .L{background:#8e44ad}.lr .R{background:#e67e22}
+.L-c{color:#8e44ad}.R-c{color:#e67e22}
+.slots{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;min-height:clamp(60px,7vh,86px);padding:10px 16px;border:4px dashed #b0bec5;border-radius:20px;width:100%;max-width:1300px;align-items:center}
+.wt{background:#eef4ff;border-radius:16px;padding:8px 18px;font-size:clamp(22px,2.3vw,38px);font-weight:900;box-shadow:0 5px 0 #b6c4dd}
+.wt.used{visibility:hidden}
+.bank{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:1300px}
+.acts{display:flex;gap:12px}
+.acts .chip{background:var(--green);color:#fff}.acts .chip.clr{background:#90a4ae}
+.story{background:var(--paper);border-radius:20px;padding:18px 26px;font-size:clamp(20px,2.1vw,34px);font-weight:800;line-height:1.5;text-align:left;border:4px solid #e0c48a;margin:8px 0 16px}
+.story b{display:block;text-align:center;color:#8b5e34;margin-bottom:6px}
+.podium{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+.podium div{background:var(--c);color:#fff;border-radius:16px;padding:8px 16px;font-weight:900;font-size:clamp(16px,1.6vw,24px)}
+.podium div.w{outline:5px solid var(--gold);transform:scale(1.08)}
+@media(max-width:820px){
+  .mapbox{width:94vw;aspect-ratio:auto;height:auto;display:flex;flex-direction:column;gap:18px;align-items:center;margin-top:20px}
+  .mapbox svg.road,.bus,.deco{display:none}
+  .stop{position:static;transform:none;flex-direction:row;gap:14px;width:100%;max-width:420px;background:rgba(255,255,255,.55);border-radius:24px;padding:10px}
+  .stop .disc{width:74px;height:74px;font-size:38px;border-width:5px}.stop .lab{font-size:17px;white-space:normal}
+  .labrow,.houses{flex-direction:column;align-items:center;gap:20px}
+  .desk{flex-direction:column}.folder{width:100%;max-height:none}
+  .fl-grid{grid-template-columns:1fr;}.teams{flex-direction:row;flex-wrap:wrap}.team{flex:1 1 45%}
+  .card{font-size:20px}.ptext{font-size:22px}.lens{display:none!important}.paper,.wd{cursor:pointer}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= MAP ================= -->
+<section class="screen on" id="map">
+  <div class="mapfoot"><button class="chip" onclick="toggleFS()">⛶ Толық экран</button><button class="chip" id="snd" onclick="toggleSnd()">🔊</button></div>
+  <div class="mapttl"><div class="ribbon">Сөздер қалашығына саяхат</div><div class="mapsub">2-сынып · Қазақ тілі · Ашық сабақ · Зат есім: Кім? Не?</div></div>
+  <div class="mapbox" id="mapbox">
+    <svg class="road" viewBox="0 0 1900 1000" preserveAspectRatio="none">
+      <path d="M150 760 C 330 600, 420 860, 600 700 S 830 360, 980 520 S 1180 820, 1340 600 S 1560 240, 1740 300" fill="none" stroke="#b07a3a" stroke-width="70" stroke-linecap="round" opacity=".55"/>
+      <path d="M150 760 C 330 600, 420 860, 600 700 S 830 360, 980 520 S 1180 820, 1340 600 S 1560 240, 1740 300" fill="none" stroke="#fff6e4" stroke-width="8" stroke-dasharray="28 22" stroke-linecap="round"/>
+      <g fill="#8fc46b" opacity=".75"><ellipse cx="300" cy="300" rx="160" ry="70"/><ellipse cx="1500" cy="860" rx="200" ry="70"/><ellipse cx="900" cy="900" rx="140" ry="50"/></g>
+      <g fill="#7fb3e6" opacity=".7"><ellipse cx="760" cy="200" rx="150" ry="60"/></g>
+    </svg>
+    <span class="deco" style="left:14%;top:26%">🌳</span><span class="deco" style="left:20%;top:32%">🌲</span><span class="deco" style="left:40%;top:18%">🦆</span>
+    <span class="deco" style="left:78%;top:84%">🌻</span><span class="deco" style="left:84%;top:80%">🌷</span><span class="deco" style="left:47%;top:88%">🐑</span>
+    <span class="deco" style="left:92%;top:12%">⛰️</span><span class="deco" style="left:60%;top:10%">☁️</span><span class="deco" style="left:4%;top:50%">🏡</span>
+    <div class="bus" id="bus">🚌</div>
+  </div>
+</section>
+
+<!-- ================= 1. LAB ================= -->
+<section class="screen" id="lab">
+  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>🧪 Сөздер зертханасы</h2><span class="labcount chip ghost" id="labcnt">0 / 12</span></div>
+  <div class="stage">
+    <div class="pipe"></div>
+    <div class="dispense" id="disp"></div>
+    <div class="hint">Сөзді ұстап, дұрыс колбаға сал! (немесе басып, сосын колбаны бас)</div>
+    <div class="labrow" id="labrow"></div>
+  </div>
+  <div class="shelf"></div>
+  <div class="fin" id="labfin"></div>
+</section>
+
+<!-- ================= 2. TOWN ================= -->
+<section class="screen" id="town">
+  <div class="stars" id="stars"></div><div class="moon"></div><div class="street"></div>
+  <div class="lamp" style="left:8%"></div><div class="lamp" style="left:50%"></div><div class="lamp" style="right:8%"></div>
+  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>🏘️ Сөздер қалашығын тұрғыз</h2><span class="chip ghost" id="towncnt">0 / 12</span></div>
+  <div class="stage">
+    <div class="hint">Әр сөзді өз үйіне апар — терезесінде шам жанады!</div>
+    <div class="houses" id="houses"></div>
+    <div class="tray" id="tray"></div>
+  </div>
+  <div class="fin" id="townfin"></div>
+</section>
+
+<!-- ================= 3. DETECTIVE ================= -->
+<section class="screen" id="det">
+  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>🔍 Мәтін детективтері</h2><span class="chip ghost">🕵️ Зат есімдерді тап!</span></div>
+  <div class="stage">
+    <div class="tabs" id="tabs"></div>
+    <div class="desk">
+      <div class="paper" id="paper"><h4>— ҚҰПИЯ МӘТІН —</h4><div class="ptext" id="ptext"></div></div>
+      <div class="folder"><h5>🗂 Айғақтар</h5><div class="ev" id="ev"></div><div class="meter" id="meter"></div></div>
+    </div>
+    <div class="hint" style="color:#f3d9b1">Зат есімді үлкейткішпен тауып бас, сосын оған «Кім?» не «Не?» сұрағын қой</div>
+  </div>
+  <div class="lens" id="lens"></div>
+  <div class="fin" id="detfin"></div>
+</section>
+
+<!-- ================= 4. SCALE ================= -->
+<section class="screen" id="scale">
+  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>⚖️ Сөз таразысы</h2><div class="rounds" id="rounds"></div></div>
+  <div class="stage">
+    <div class="scl" id="scl"><div class="post"></div><div class="base"></div><div class="beam" id="beam"></div><div class="pivot"></div></div>
+    <div class="qpanel" id="qpanel"></div>
+  </div>
+  <div class="fin" id="sclfin"></div>
+</section>
+
+<!-- ================= 5. FALCON ================= -->
+<section class="screen" id="falcon">
+  <div class="cloud" style="top:12%;width:160px;height:50px;animation-duration:55s"></div>
+  <div class="cloud" style="top:24%;width:110px;height:36px;animation-duration:38s;animation-delay:-20s"></div>
+  <svg class="mnt" viewBox="0 0 1600 400" preserveAspectRatio="none"><path d="M0 400 L0 260 L180 120 L330 240 L520 60 L700 230 L860 140 L1050 260 L1240 90 L1420 220 L1600 150 L1600 400Z" fill="#7d93b8"/><path d="M520 60 L470 120 L500 115 L530 140 L560 110 L590 125Z M1240 90 L1195 145 L1225 140 L1255 160 L1280 135 L1300 140Z" fill="#fff"/><path d="M0 400 L0 320 L240 230 L460 330 L700 260 L960 340 L1200 270 L1400 330 L1600 280 L1600 400Z" fill="#5d7a5a"/></svg>
+  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>🦅 Лашынның қанаты</h2><span class="chip ghost" id="flround">1-кезең</span></div>
+  <div class="stage"><div class="fl-grid" id="flgrid"></div></div>
+  <div class="fin" id="flfin"></div>
+</section>
+
+<div id="toast"></div>
+<canvas id="fx"></canvas>
+<div class="ghostcard card" id="ghost" style="display:none"></div>
+
+<script>
+/* ================= helpers ================= */
+const $=s=>document.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=(a,n)=>shuffle(a).slice(0,n);
+const re=(e,c)=>{e.classList.remove(c);void e.offsetWidth;e.classList.add(c)};
+let SND=true,AC=null;
+function tone(f,d,t=0,type='sine',v=.22){if(!SND)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(v,AC.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+t+d);o.connect(g);g.connect(AC.destination);o.start(AC.currentTime+t);o.stop(AC.currentTime+t+d)}catch(e){}}
+const sfx={ok(){tone(660,.12);tone(990,.2,.1)},bad(){tone(160,.3,0,'square',.09)},tap(){tone(520,.08,0,'sine',.15)},
+  win(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,.35,i*.12))},pour(){[300,360,420,500].forEach((f,i)=>tone(f,.12,i*.05,'triangle',.12))},
+  stamp(){tone(120,.15,0,'square',.15);tone(80,.2,.05,'sawtooth',.1)},whoosh(){[900,700,500,300].forEach((f,i)=>tone(f,.1,i*.06,'sine',.1))}};
+function toggleSnd(){SND=!SND;$('#snd').textContent=SND?'🔊':'🔇'}
+function toggleFS(){if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.()}
+let tT;function toast(t,k=''){const e=$('#toast');e.textContent=t;e.className='on '+k;clearTimeout(tT);tT=setTimeout(()=>e.className='',1100)}
+/* confetti */
+let CF=0;function confetti(n=180){const my=++CF,c=$('#fx'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;
+  const P=Array.from({length:n},()=>({x:innerWidth/2+rnd(-200,200),y:innerHeight*.45,vx:(Math.random()-.5)*20,vy:-Math.random()*20-6,s:rnd(7,15),c:['#e8483f','#2f6fe4','#ffc83d','#2fae5b','#9b59b6','#ff8fab'][rnd(0,5)],r:Math.random()*6}));
+  const t0=performance.now();(function f(t){if(my!==CF)return;x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.45;p.vx*=.99;p.r+=.15;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore()});
+  if(t-t0<4200)requestAnimationFrame(f);else x.clearRect(0,0,c.width,c.height)})(t0)}
+function stopFX(){CF++;const c=$('#fx');c.getContext('2d').clearRect(0,0,c.width,c.height)}
+/* screens */
+let RID=0;
+function show(id){RID++;stopFX();document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));$('#lens').style.display='none'}
+/* drag & tap */
+let SEL=null;
+function draggable(card,targets,onDrop){
+  card.addEventListener('pointerdown',e=>{if(card.dataset.off)return;e.preventDefault();const sx=e.clientX,sy=e.clientY;let moved=false,over=null;const g=$('#ghost');
+    try{card.setPointerCapture(e.pointerId)}catch(_){}
+    const tgt=ev=>{g.style.display='none';const t=document.elementFromPoint(ev.clientX,ev.clientY);if(moved)g.style.display='flex';return t&&targets().find(x=>x.contains(t))};
+    const mv=ev=>{if(!moved&&Math.hypot(ev.clientX-sx,ev.clientY-sy)>10){moved=true;g.innerHTML=card.innerHTML;g.style.display='flex';card.classList.add('drag')}
+      if(!moved)return;g.style.left=ev.clientX+'px';g.style.top=ev.clientY+'px';const t=tgt(ev);if(t!==over){over&&over.classList.remove('over');over=t;over&&over.classList.add('over')}};
+    const up=ev=>{card.removeEventListener('pointermove',mv);card.removeEventListener('pointerup',up);card.removeEventListener('pointercancel',up);
+      g.style.display='none';card.classList.remove('drag');over&&over.classList.remove('over');
+      if(moved){const t=tgt(ev);g.style.display='none';if(t)onDrop(t)}else{if(SEL&&SEL!==card)SEL.classList.remove('sel');SEL=card;card.classList.add('sel');sfx.tap()}};
+    card.addEventListener('pointermove',mv);card.addEventListener('pointerup',up);card.addEventListener('pointercancel',up)})}
+function tapTarget(t,onDrop){t.addEventListener('click',()=>{if(SEL&&document.body.contains(SEL)){const c=SEL;SEL.classList.remove('sel');SEL=null;onDrop(t,c)}})}
+function finBox(id,{icon='🏆',title='Жарайсың!',text='',err=null,again,extra=''}){const f=$(id);
+  f.innerHTML=`<div class="finbox"><div class="big">${icon}</div><h3>${title}</h3><p>${text}${err!=null?`<br><span class="errs ${err?'':'zero'}">${err?'Қате саны: '+err:'Бірде-бір қате жоқ! 🌟'}</span>`:''}</p>${extra}<div class="row"><button class="chip again">🔁 Қайтадан</button><button class="chip alt">🗺 Картаға</button></div></div>`;
+  f.querySelector('.again').onclick=()=>{f.classList.remove('on');again()};f.querySelector('.alt').onclick=()=>toMap();f.classList.add('on');sfx.win();confetti()}
+
+/* ================= DATA ================= */
+const KIM=[['👩‍🏫','мұғалім'],['🧑‍⚕️','дәрігер'],['🧑‍🎓','оқушы'],['🧑‍🍳','аспаз'],['🎤','әнші'],['🧒','бала'],['👴','ата'],['👵','әже'],['👩','ана'],['👨','әке'],['👮','полицей'],['🧑‍✈️','ұшқыш'],
+ ['🧑‍🚒','өрт сөндіруші'],['🧑‍🎨','суретші'],['🧑‍🌾','диқан'],['👷','құрылысшы'],['🧑‍🚀','ғарышкер'],['👧','қыз'],['👦','ұл'],['💃','биші'],['🏃','спортшы'],['🧑‍🔧','шебер'],['🤵','күйеу'],['👰','қалыңдық']];
+const NE=[['🍎','алма'],['📕','кітап'],['🌳','ағаш'],['⚽','доп'],['🌸','гүл'],['🖊️','қалам'],['🐱','мысық'],['🐶','ит'],['🏠','үй'],['☀️','күн'],['🚗','машина'],['⏰','сағат'],
+ ['🍞','нан'],['🐦','құс'],['🐟','балық'],['⭐','жұлдыз'],['✈️','ұшақ'],['❄️','қар'],['🎂','торт'],['🥄','қасық'],['👗','көйлек'],['🎈','шар'],['📺','теледидар'],['🪑','орындық']];
+const ALL=[...KIM.map(x=>[...x,'k']),...NE.map(x=>[...x,'n'])];
+const DONE=new Set();
+
+/* ================= MAP ================= */
+const STOPS=[{id:'lab',x:8,y:76,ic:'🧪',n:'Зертхана',s:'Кім? Не?',c:'#16a085',go:startLab},
+ {id:'town',x:31.5,y:70,ic:'🏘️',n:'Қалашық',s:'Сөздер үйі',c:'#e8483f',go:startTown},
+ {id:'det',x:51.5,y:52,ic:'🔍',n:'Детективтер',s:'Мәтін',c:'#8b5e34',go:startDet},
+ {id:'scale',x:70.5,y:60,ic:'⚖️',n:'Таразы',s:'Сөздерді есепте',c:'#d4a017',go:startScale},
+ {id:'falcon',x:91.5,y:30,ic:'🦅',n:'Лашын шыңы',s:'4 топ · Л мен Р',c:'#2f6fe4',go:startFalcon,sp:1}];
+let busAt=-1;
+function drawMap(){const mb=$('#mapbox');mb.querySelectorAll('.stop').forEach(s=>s.remove());
+  STOPS.forEach((S,i)=>{const b=el('button','stop'+(DONE.has(S.id)?' done':'')+(S.sp?' special':''),`<div class="disc" style="--c:${S.c}">${S.ic}<span class="num" style="--c:${S.c}">${S.sp?'★':i+1}</span></div><div class="lab">${S.n}<small>${S.s}</small></div>`);
+    b.style.left=S.x+'%';b.style.top=S.y+'%';b.style.setProperty('--c',S.c);b.onclick=()=>{sfx.whoosh();moveBus(i);setTimeout(()=>S.go(),innerWidth>820?850:0)};mb.append(b)});
+  if(busAt<0){const bus=$('#bus');bus.style.left='3%';bus.style.top='86%'}}
+function moveBus(i){busAt=i;const bus=$('#bus');bus.style.left=STOPS[i].x+'%';bus.style.top=(STOPS[i].y-4)+'%'}
+function toMap(){show('map');drawMap()}
+
+/* ================= 1. LAB ================= */
+const FLASK_P='M78 6 h44 v74 l72 150 q9 24 -16 24 h-156 q-25 0 -16 -24 l72 -150 z';
+function flaskSVG(id,col){let b='';for(let i=0;i<7;i++)b+=`<circle class="bub" cx="${40+rnd(0,120)}" cy="${235-rnd(0,20)}" r="${rnd(4,9)}" fill="rgba(255,255,255,.7)" style="animation-delay:${(Math.random()*2.4).toFixed(2)}s"/>`;
+  return `<svg viewBox="0 0 200 262"><defs><clipPath id="cp${id}"><path d="${FLASK_P}"/></clipPath><linearGradient id="lg${id}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".75"/><stop offset="1" stop-color="${col}"/></linearGradient></defs>
+  <path d="${FLASK_P}" fill="rgba(255,255,255,.14)"/><g clip-path="url(#cp${id})"><g class="liq" style="transform:translateY(262px)"><rect x="0" y="0" width="200" height="262" fill="url(#lg${id})"/><path d="M0 6 Q25 -4 50 6 T100 6 T150 6 T200 6 V0 H0Z" fill="rgba(255,255,255,.35)"/></g><g class="bubs" style="opacity:0">${b}</g></g>
+  <path d="${FLASK_P}" fill="none" stroke="#e6fbff" stroke-width="7" stroke-linejoin="round"/><rect x="70" y="0" width="60" height="12" rx="6" fill="#e6fbff"/><path d="M60 150 q10 -30 22 -40" stroke="rgba(255,255,255,.6)" stroke-width="6" fill="none" stroke-linecap="round"/></svg>`}
+function startLab(){show('lab');const id=RID;$('#labfin').classList.remove('on');let err=0;
+  const items=shuffle([...pick(KIM,6).map(x=>[...x,'k']),...pick(NE,6).map(x=>[...x,'n'])]);let i=0;const cnt={k:0,n:0};
+  const row=$('#labrow');row.innerHTML='';const F={};
+  [['k','Кім?','адамдар','#e8483f'],['n','Не?','заттар, жануарлар','#2f6fe4']].forEach(([k,t,s,c])=>{const f=el('div','flask',`<div class="puff"></div>${flaskSVG(k,c)}<div class="tag" style="--c:${c}">${t}<small>${s}</small></div>`);f.dataset.k=k;F[k]=f;row.append(f);tapTarget(f,(t,card)=>drop(t,card))});
+  const upd=()=>$('#labcnt').textContent=`${i} / ${items.length}`;
+  function next(){if(RID!==id)return;upd();const d=$('#disp');d.innerHTML='';if(i>=items.length)return finish();const [e,w,k]=items[i];
+    const c=el('div','card',`<span class="e">${e}</span>${w}`);c.dataset.k=k;d.append(c);draggable(c,()=>Object.values(F),t=>drop(t,c))}
+  function drop(f,c){if(!c.dataset.k||c.dataset.off)return;if(f.dataset.k!==c.dataset.k){err++;sfx.bad();re(f.querySelector('.puff'),'go');re(c,'shake');toast(c.dataset.k==='k'?'Бұл – адам! «Кім?» деп сұраймыз':'Бұл – зат! «Не?» деп сұраймыз','bad');return}
+    c.dataset.off=1;sfx.pour();cnt[f.dataset.k]++;const lv=262-Math.min(1,cnt[f.dataset.k]/6)*200;f.querySelector('.liq').style.transform=`translateY(${lv}px)`;f.querySelector('.bubs').style.opacity=1;
+    c.style.transition='.45s';c.style.transform='scale(.2) translateY(200px)';c.style.opacity=0;i++;setTimeout(next,450)}
+  function finish(){DONE.add('lab');sfx.win();Object.values(F).forEach(f=>re(f,'pop'));setTimeout(()=>{if(RID!==id)return;
+    finBox('#labfin',{icon:'💥🧪',title:'Тәжірибе сәтті өтті!',text:'Барлық сөз өз колбасында!',err,again:startLab,extra:`<div class="question">🔬 Зерттеу сұрағы:<br>Неліктен бір сөзге <span style="color:var(--red)">«Кім?»</span>, екіншісіне <span style="color:var(--blue)">«Не?»</span> сұрағын қоямыз?</div><br>`})},700)}
+  next()}
+
+/* ================= 2. TOWN ================= */
+function startTown(){show('town');const id=RID;const T=$('#town');T.classList.remove('lit');$('#townfin').classList.remove('on');let err=0,placed=0;
+  const st=$('#stars');if(!st.children.length)for(let i=0;i<70;i++){const s=el('i');s.style.left=rnd(0,100)+'%';s.style.top=rnd(0,55)+'%';s.style.animationDelay=(Math.random()*1.6)+'s';st.append(s)}
+  const items=shuffle([...pick(KIM,6).map(x=>[...x,'k']),...pick(NE,6).map(x=>[...x,'n'])]);
+  const H=$('#houses');H.innerHTML='';const HS={};
+  [['k','Кім? үйі','#e8483f','#ffe0c2'],['n','Не? үйі','#2f6fe4','#d7e6ff']].forEach(([k,t,c,w])=>{const h=el('div','house',`<div class="chim"></div><div class="smoke">💨</div><div class="roof" style="--c:${c}"><b>${t}</b></div><div class="hbody" style="--w:${w}">${'<div class="win"><span class="we"></span><span class="ww"></span></div>'.repeat(6)}<div class="door"></div></div>`);
+    h.dataset.k=k;HS[k]=h;H.append(h);tapTarget(h,(t,c)=>drop(t,c))});
+  const tray=$('#tray');tray.innerHTML='';
+  items.forEach(([e,w,k])=>{const c=el('div','card',`<span class="e">${e}</span>${w}`);c.dataset.k=k;c.dataset.e=e;c.dataset.w=w;tray.append(c);draggable(c,()=>Object.values(HS),t=>drop(t,c))});
+  const upd=()=>$('#towncnt').textContent=`${placed} / 12`;upd();
+  function drop(h,c){if(c.dataset.off)return;if(h.dataset.k!==c.dataset.k){err++;sfx.bad();re(h,'shake');re(c,'shake');toast('🦉 Уһу! Бұл үй емес…','bad');return}
+    const w=[...h.querySelectorAll('.win')].find(x=>!x.classList.contains('on'));if(!w)return;c.dataset.off=1;
+    w.querySelector('.we').textContent=c.dataset.e;w.querySelector('.ww').textContent=c.dataset.w;w.classList.add('on');sfx.ok();c.remove();placed++;upd();
+    if(placed===12){DONE.add('town');setTimeout(()=>{if(RID!==id)return;T.classList.add('lit');sfx.win();setTimeout(()=>{if(RID===id)finBox('#townfin',{icon:'🌃',title:'Қалашық жанданды!',text:'Барлық терезеде шам жанды. «Кім?» үйінде – адамдар, «Не?» үйінде – заттар мен жануарлар.',err,again:startTown})},2200)},500)}}}
+
+/* ================= 3. DETECTIVE ================= */
+const TEXTS=[{t:'Бақта',s:'*Айша/k *баққа/n барды. *Бақта/n *алма/n *ағашы/n өсіп тұр. *Атасы/k *алма/n терді. *Айша/k *себет/n әкелді. Олар *алмаларды/n *себетке/n салды.'},
+ {t:'Ауруханада',s:'*Дәрігер/k *ауруханада/n *жұмыс/n істейді. Ол *балаларды/k емдейді. *Медбике/k *дәрі/n береді. *Ауруханада/n әдемі *гүлдер/n бар.'},
+ {t:'Асханада',s:'*Аспаз/k *асханада/n *тамақ/n пісірді. Ол *қазанға/n *ет/n салды. *Балалар/k *нан/n мен *шай/n ішті. *Мысық/n *терезеде/n ұйықтады.'},
+ {t:'Сыныпта',s:'*Мұғалім/k *сыныпқа/n кірді. *Оқушылар/k *кітап/n ашты. *Әнші/k *ән/n айтты. *Бала/k *доп/n пен *қаламды/n алды.'}];
+let detIdx=0;
+function startDet(i){if(typeof i==='number')detIdx=i;show('det');const id=RID;$('#detfin').classList.remove('on');const tabs=$('#tabs');tabs.innerHTML='';
+  TEXTS.forEach((T,k)=>{const b=el('button','tab'+(k===detIdx?' on':''),`№${k+1} ${T.t}`);b.onclick=()=>startDet(k);tabs.append(b)});
+  const P=$('#ptext');P.innerHTML='';const ev=$('#ev');ev.innerHTML='';let err=0,found=0;const T=TEXTS[detIdx];let total=0;
+  T.s.split(' ').forEach(tok=>{const m=tok.match(/^\*([^/]+)\/(k|n)(.*)$/);let w,k=null,tail='';if(m){w=m[1];k=m[2];tail=m[3];total++}else{const mm=tok.match(/^(.+?)([.,!?]*)$/);w=mm[1];tail=mm[2]}
+    const s=el('span','wd',w);if(k)s.dataset.k=k;s.onclick=ev2=>clickW(s,ev2);P.append(s);if(tail)P.append(tail);P.append(' ')});
+  const meter=()=>$('#meter').innerHTML=`Табылды: ${found} / ${total}<div class="barx"><i style="width:${found/total*100}%"></i></div>`;meter();
+  const paper=$('#paper'),lens=$('#lens');paper.onpointermove=e=>{if(innerWidth<=820)return;lens.style.display='block';lens.style.left=e.clientX+'px';lens.style.top=e.clientY+'px'};paper.onpointerleave=()=>lens.style.display='none';
+  let askEl=null;const closeAsk=()=>{askEl&&askEl.remove();askEl=null};
+  function clickW(s){if(s.classList.contains('found'))return;closeAsk();
+    if(!s.dataset.k){err++;sfx.bad();re(s,'shake');toast('Бұл зат есім емес 🙅','bad');return}
+    sfx.tap();askEl=el('div','ask','<button class="k">Кім?</button><button class="n">Не?</button>');const r=s.getBoundingClientRect(),pr=$('#det').getBoundingClientRect();
+    askEl.style.left=(r.left+r.width/2-pr.left)+'px';askEl.style.top=(r.bottom-pr.top)+'px';$('#det').append(askEl);
+    askEl.querySelectorAll('button').forEach(b=>b.onclick=e=>{e.stopPropagation();const k=b.className;if(k!==s.dataset.k){err++;sfx.bad();re(askEl,'shake');toast(s.dataset.k==='k'?'Ол – адам. Кім?':'Ол – зат. Не?','bad');return}
+      closeAsk();sfx.stamp();s.classList.add('found');s.append(el('span','stamp '+k,k==='k'?'КІМ?':'НЕ?'));found++;meter();
+      const c=el('div','evc '+k,`${s.firstChild.textContent}<i>${k==='k'?'кім?':'не?'}</i>`);c.style.setProperty('--r',rnd(-5,5)+'deg');ev.append(c);
+      if(found===total){DONE.add('det');setTimeout(()=>{if(RID===id)finBox('#detfin',{icon:'🕵️',title:'Іс ашылды!',text:`Мәтіндегі ${total} зат есімнің бәрі табылды!`,err,again:()=>startDet(detIdx),extra:detIdx<3?'<p style="margin-top:-8px">Келесі мәтінге көшуге болады 👉</p>':''})},700)}})}
+  $('#det').onclick=e=>{if(askEl&&!askEl.contains(e.target)&&!e.target.classList.contains('wd'))closeAsk()}}
+
+/* ================= 4. SCALE ================= */
+function startScale(){show('scale');const id=RID;$('#sclfin').classList.remove('on');let err=0,round=0;const R=5;
+  const scl=$('#scl');scl.querySelectorAll('.pan').forEach(p=>p.remove());
+  const pans=[['k','«Кім?» үйі','#e8483f'],['n','«Не?» үйі','#2f6fe4']].map(([k,t,c])=>{const p=el('div','pan',`<div class="strings"></div><div class="dish"></div><div class="lbl">${t}</div>`);p.style.setProperty('--c',c);scl.append(p);return p});
+  function place(a){const W=scl.clientWidth,Hh=scl.clientHeight,cx=W/2,cy=Hh*.18+9,L=W*.37,r=a*Math.PI/180;
+    $('#beam').style.transform=`rotate(${a}deg)`;
+    [[-1,pans[0]],[1,pans[1]]].forEach(([s,p])=>{p.style.left=(cx+s*L*Math.cos(r))+'px';p.style.top=(cy+s*L*Math.sin(r))+'px'})}
+  const drawR=()=>{$('#rounds').innerHTML=Array.from({length:R},(_,i)=>`<i class="${i<round?'d':i===round?'c':''}"></i>`).join('')};
+  function newRound(){if(RID!==id)return;if(round>=R){DONE.add('scale');return finBox('#sclfin',{icon:'⚖️',title:'Таразы теңелді!',text:`${R} раундтың бәрі шешілді!`,err,again:startScale})}
+    drawR();let a,b;do{a=rnd(3,12);b=rnd(3,12)}while(a===b);
+    pans.forEach(p=>p.querySelector('.dish').innerHTML='');place(0);
+    const ws=[pick(KIM,a).map(x=>x[1]),pick(NE,b).map(x=>x[1])];
+    ws.forEach((L,s)=>L.forEach((w,j)=>setTimeout(()=>{if(RID!==id)return;const c=el('span','wchip',w);pans[s].querySelector('.dish').append(c);sfx.tap()},j*120+s*60)));
+    setTimeout(()=>{if(RID===id)place(Math.max(-16,Math.min(16,(b-a)*3)))},Math.max(a,b)*120+200);
+    const Q=[{t:'Қай табақта сөз көп?',ch:[['«Кім?» үйінде','#e8483f',a>b],['«Не?» үйінде','#2f6fe4',b>a]]},{t:`«Кім?» үйінде ${a} сөз, «Не?» үйінде ${b} сөз. Қаншаға артық?`,ans:Math.abs(a-b),ex:`${Math.max(a,b)} − ${Math.min(a,b)} =`},{t:'Барлығы неше сөз?',ans:a+b,ex:`${a} + ${b} =`}];
+    let q=0;const P=$('#qpanel');
+    function ask(){if(RID!==id)return;P.innerHTML='';const Qq=Q[q];P.append(el('div','qtext',Qq.t));
+      if(Qq.ch){const c=el('div','choices');Qq.ch.forEach(([t,col,ok])=>{const b=el('button','',t);b.style.setProperty('--c',col);b.onclick=()=>{if(ok){sfx.ok();toast('Дұрыс! 👍','good');q++;setTimeout(ask,600)}else{err++;sfx.bad();re(b,'shake')}};c.append(b)});P.append(c);return}
+      const box=el('span','abox','');const r=el('div','ansrow');r.append(Qq.ex,box);P.append(r);let v='';
+      const pad=el('div','pad');[1,2,3,4,5,6,7,8,9,0,'⌫','✓'].forEach(k=>{const b=el('button',k==='✓'?'go':k==='⌫'?'bk':'',k==='✓'?'ТЕКСЕРУ':k);b.onclick=()=>press(k);pad.append(b)});P.append(pad);
+      function press(k){if(k==='⌫')v=v.slice(0,-1);else if(k==='✓'){if(!v)return;if(+v===Qq.ans){box.classList.add('ok');sfx.ok();toast('Дұрыс! 👍','good');q++;setTimeout(()=>q<Q.length?ask():(round++,newRound()),800)}else{err++;sfx.bad();re(box,'shake');v=''}}else if(v.length<2)v+=k;box.textContent=v;sfx.tap()}
+      document.onkeydown=e=>{if(!$('#scale').classList.contains('on')||!document.body.contains(pad))return;if(/^\d$/.test(e.key))press(+e.key);else if(e.key==='Backspace')press('⌫');else if(e.key==='Enter')press('✓')}}
+    ask()}
+  addEventListener('resize',()=>{});newRound()}
+
+/* ================= 5. FALCON ================= */
+const TEAMS=[{n:'Сұңқар',i:'🦅',c:'#e8483f'},{n:'Қыран',i:'🦉',c:'#2f6fe4'},{n:'Тұйғын',i:'🐦',c:'#2fae5b'},{n:'Ителгі',i:'🕊️',c:'#9b59b6'}];
+const LR=['лашын','лағыл','лебіз','рақмет','рақат','рең','рақым','Іле','ілгіш','ілесу','ірі','ірімшік','ылди','ылғал','ілгек','ілгері','ырыс','ылғи'];
+const QS=[{q:'1. Лашын қандай құс?',w:['Лашын','–','жыртқыш','құс.'],x:['үй','баяу'],ok:[['Лашын','–','жыртқыш','құс.']]},
+ {q:'2. Оның түсі, көзі қандай?',w:['Түсі','қоңыр,','көзі','өткір.'],x:['жасыл','ұзын'],ok:[['Түсі','қоңыр,','көзі','өткір.']]},
+ {q:'3. Ал тырнақтары қандай?',w:['Тырнақтары','өткір','әрі','мықты.'],x:['жұмсақ','кішкентай'],ok:[['Тырнақтары','өткір','әрі','мықты.']]},
+ {q:'4. Оны неліктен жыртқыш құс деп атайды?',w:['Ол','ұсақ','құстар','мен','тышқандарды','аулайды.'],x:['жейді','ұйықтайды'],ok:[['Ол','ұсақ','құстар','мен','тышқандарды','аулайды.']]}];
+const lrColor=w=>[...w].map(ch=>/[лЛ]/.test(ch)?`<span class="L-c">${ch}</span>`:/[рР]/.test(ch)?`<span class="R-c">${ch}</span>`:ch).join('');
+function falconSVG(){let f='';const N=12;for(let i=0;i<N;i++){const a=-70+i*9.5;f+=`<path class="fth" data-i="${i}" d="M0 0 C 18 -20, 30 -110, 6 -175 C -8 -110, -14 -30, 0 0Z" fill="#8d6e63" stroke="#4e342e" stroke-width="3" transform="translate(250 170) rotate(${a})"/>`}
+  return `<svg viewBox="0 0 560 420"><g class="wing">${f}</g>
+  <path d="M120 300 L40 380 L70 384 L60 410 L120 360 L150 330Z" fill="#6d4c41" stroke="#3e2723" stroke-width="4"/>
+  <ellipse cx="250" cy="250" rx="140" ry="92" fill="#a1887f" stroke="#4e342e" stroke-width="5"/>
+  <path d="M190 240 q60 70 150 40 q-20 60 -110 50 q-60 -10 -40 -90z" fill="#efebe9" opacity=".9"/>
+  <g fill="#6d4c41">${Array.from({length:10},(_,i)=>`<path d="M${215+(i%5)*24} ${270+Math.floor(i/5)*24} l8 10 l8 -10" stroke="#6d4c41" stroke-width="4" fill="none"/>`).join('')}</g>
+  <circle cx="382" cy="170" r="66" fill="#5d4037" stroke="#3e2723" stroke-width="5"/>
+  <path d="M352 190 q30 40 70 10 q-10 40 -50 40z" fill="#efebe9"/>
+  <path d="M440 160 q42 6 48 32 q-14 -6 -26 -2 q-6 16 -22 18z" fill="#ffc83d" stroke="#8d6e00" stroke-width="4"/>
+  <circle cx="410" cy="152" r="17" fill="#ffd54f" stroke="#3e2723" stroke-width="4"/><circle cx="414" cy="152" r="8" fill="#111"/><circle cx="417" cy="148" r="3" fill="#fff"/>
+  <path d="M392 136 q20 -10 36 2" stroke="#3e2723" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <g stroke="#ffb300" stroke-width="9" stroke-linecap="round" fill="none"><path d="M220 335 v40 m0 0 l-18 14 m18 -14 l0 20 m0 -20 l18 14"/><path d="M290 338 v40 m0 0 l-18 14 m18 -14 l0 20 m0 -20 l18 14"/></g>
+  <g fill="#212121"><path d="M200 390 l-6 10 M222 396 l0 12 M240 390 l6 10"/></g>
+  <rect x="150" y="398" width="220" height="16" rx="8" fill="#6d4c41"/></svg>`}
+function startFalcon(){show('falcon');const id=RID;$('#flfin').classList.remove('on');const G=$('#flgrid');G.innerHTML='';
+  const sc=[0,0,0,0],sent=[];let fi=0,err=0;
+  const left=el('div','teams'),right=el('div','teams'),bird=el('div','bird',falconSVG());
+  const tEl=TEAMS.map((T,i)=>{const t=el('div','team',`<span class="ti">${T.i}</span><div class="tn">${T.n}<small>${i+1}-топ</small></div><span class="fe">🪶 0</span>`);t.style.setProperty('--c',T.c);(i<2?left:right).append(t);return t});
+  const task=el('div','task');G.append(left,bird,right,task);
+  const setAct=i=>{tEl.forEach((t,k)=>t.classList.toggle('act',k===i));if(TEAMS[i])task.style.setProperty('--c',TEAMS[i].c)};
+  const feather=i=>{sc[i]++;tEl[i].querySelector('.fe').textContent='🪶 '+sc[i];const f=bird.querySelector(`.fth[data-i="${fi++}"]`);if(f){f.classList.add('on');f.setAttribute('fill',TEAMS[i].c)}re(tEl[i],'pop')};
+  /* round 1: Л ма, Р ма? */
+  const words=pick(LR,8);let turn=0;$('#flround').textContent='1-кезең · Л ма, Р ма?';
+  function r1(){if(RID!==id)return;if(turn>=8)return r2start();const ti=turn%4;setAct(ti);const w=words[turn];const p=[...w].findIndex(c=>/[лрЛР]/.test(c));const L=w[p].toLowerCase();
+    task.innerHTML=`<div class="tq"><span class="who">${TEAMS[ti].i} ${TEAMS[ti].n}</span> тобы: бос орынға қай әріп керек?</div><div class="lword">${w.slice(0,p)}<span class="gap">?</span>${w.slice(p+1)}</div><div class="lr"><button class="L">Л</button><button class="R">Р</button></div>`;
+    let done=false;task.querySelectorAll('.lr button').forEach(b=>b.onclick=()=>{if(done)return;done=true;const v=b.className==='L'?'л':'р';const g=task.querySelector('.gap');g.innerHTML=`<span class="${L==='л'?'L-c':'R-c'}">${p===0?L.toUpperCase():L}</span>`;
+      if(v===L){sfx.ok();toast('Дұрыс! Қауырсын алдыңдар 🪶','good');feather(ti)}else{err++;sfx.bad();toast(`Дұрысы – ${L.toUpperCase()}`,'bad');re(task.querySelector('.lword'),'shake')}
+      turn++;setTimeout(r1,1500)})}
+  /* round 2: сипатта */
+  let qi=0;function r2start(){$('#flround').textContent='2-кезең · Лашынды сипатта';r2()}
+  function r2(){if(RID!==id)return;if(qi>=4)return final();setAct(qi);const Q=QS[qi];let tries=0;const chosen=[];
+    task.innerHTML=`<div class="tq"><span class="who">${TEAMS[qi].i} ${TEAMS[qi].n}</span> тобының сұрағы:<br>${Q.q}</div><div class="slots"></div><div class="bank"></div><div class="acts"><button class="chip clr">↺ Тазалау</button><button class="chip">✅ Тексеру</button></div><div class="hint" style="color:#555">Сөздерді дұрыс ретпен басып, жауап-сөйлем құра. <span class="L-c">Л</span> мен <span class="R-c">Р</span> әріптеріне назар аудар!</div>`;
+    const slots=task.querySelector('.slots'),bank=task.querySelector('.bank');
+    const draw=()=>{slots.innerHTML='';chosen.forEach((b,k)=>{const s=el('button','wt',lrColor(b.dataset.w));s.onclick=()=>{chosen.splice(k,1);b.classList.remove('used');sfx.tap();draw()};slots.append(s)})};
+    shuffle([...Q.w,...Q.x]).forEach(w=>{const b=el('button','wt',lrColor(w));b.dataset.w=w;b.onclick=()=>{if(b.classList.contains('used'))return;b.classList.add('used');chosen.push(b);sfx.tap();draw()};bank.append(b)});
+    task.querySelector('.clr').onclick=()=>{chosen.splice(0).forEach(b=>b.classList.remove('used'));draw()};
+    task.querySelector('.acts .chip:not(.clr)').onclick=()=>{const s=chosen.map(b=>b.dataset.w);
+      if(Q.ok.some(o=>o.length===s.length&&o.every((w,k)=>w===s[k]))){sfx.ok();toast('Керемет сөйлем! 🪶🪶','good');feather(qi);feather(qi);sent[qi]=s.join(' ');qi++;setTimeout(r2,1300)}
+      else{err++;tries++;sfx.bad();re(slots,'shake');if(tries>=2){sent[qi]=Q.ok[0].join(' ');toast('Дұрыс жауапты көрейік','bad');chosen.splice(0).forEach(b=>b.classList.remove('used'));
+        Q.ok[0].forEach(w=>{const b=[...bank.children].find(x=>x.dataset.w===w&&!x.classList.contains('used'));b.classList.add('used');chosen.push(b)});draw();qi++;setTimeout(r2,2600)}else toast('Тағы ойланып көріңдер 🤔','bad')}}}
+  function final(){DONE.add('falcon');task.innerHTML='';setAct(-1);$('#flround').textContent='Мәре!';bird.classList.add('fly');sfx.whoosh();
+    const mx=Math.max(...sc);setTimeout(()=>{if(RID!==id)return;
+      finBox('#flfin',{icon:'🦅',title:'Лашын көкке самғады!',text:'',again:startFalcon,
+        extra:`<div class="podium">${TEAMS.map((T,i)=>`<div class="${sc[i]===mx?'w':''}" style="--c:${T.c}">${sc[i]===mx?'👑 ':''}${T.i} ${T.n}: 🪶 ${sc[i]}</div>`).join('')}</div><div class="story"><b>🦅 Лашын</b>${sent.map(lrColor).join(' ')}</div>`})},2400)}
+  r1()}
+
+/* ================= init ================= */
+drawMap();
+</script>
+</body>
+</html>
