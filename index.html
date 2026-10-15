@@ -13,6 +13,7 @@ body{font-family:'Nunito',system-ui,sans-serif;color:var(--ink);background:#1421
 button{font-family:inherit;border:none;cursor:pointer;color:inherit}
 .screen{display:none;min-height:100vh;position:relative;flex-direction:column}
 .screen.on{display:flex}
+@media(min-width:821px){.screen{height:100vh;overflow:hidden}.stage{flex:1 1 auto;min-height:0}}
 /* ---------- top bar ---------- */
 .bar{display:flex;align-items:center;gap:12px;padding:14px 20px 6px;position:relative;z-index:20}
 .bar h2{flex:1;text-align:center;color:#fff;font-size:clamp(22px,2.6vw,40px);font-weight:900;text-shadow:0 3px 0 rgba(0,0,0,.35);letter-spacing:.5px}
@@ -208,7 +209,8 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:950}
 .task .tq{font-size:clamp(22px,2.4vw,38px);font-weight:900;text-align:center}
 .task .tq .who{color:var(--c)}
 .lword{font-size:clamp(52px,6vw,96px);font-weight:900;letter-spacing:4px}
-.lword .gap{display:inline-block;min-width:.8em;border-bottom:8px solid var(--ink);color:var(--red)}
+.lword .gap{display:inline-block;min-width:.8em;border-bottom:8px solid var(--ink);color:#b0bec5}.lword .gap.now{color:var(--red);border-color:var(--red);animation:pop 1s infinite}
+.tmr{display:inline-block;background:var(--ink);color:#fff;border-radius:12px;padding:0 12px;margin-left:10px}.tmr.warn{background:var(--red)}
 .lr{display:flex;gap:24px}
 .lr button{width:clamp(90px,9vw,140px);height:clamp(90px,9vw,140px);border-radius:28px;font-size:clamp(54px,5.6vw,90px);font-weight:900;color:#fff;box-shadow:0 8px 0 rgba(0,0,0,.25)}
 .lr .L{background:#8e44ad}.lr .R{background:#e67e22}
@@ -267,7 +269,9 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:950}
 .canvasart svg{position:absolute;inset:0;width:100%;height:100%}
 .canvasart .bld{cursor:pointer;transition:fill .4s}
 .canvasart.gray svg{filter:grayscale(1)}
-.stk{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none;animation:pop .45s}
+.stk{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;cursor:pointer;animation:pop .45s}
+.stk .sx{position:absolute;top:-8px;right:-14px;width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;font-size:14px;display:grid;place-items:center;border:2px solid #fff}
+#art.locked .stk .sx{display:none}
 .stk .se{font-size:clamp(34px,3.6vw,60px);line-height:1;filter:drop-shadow(0 4px 2px rgba(0,0,0,.25))}
 .stk .sw{background:#fff;border-radius:8px;padding:0 8px;font-weight:900;font-size:clamp(12px,1.1vw,18px);border:3px solid #8b5e34}
 .palette{display:flex;flex-direction:column;gap:10px;background:#8b5e34;border-radius:40px;padding:14px 10px;justify-content:center}
@@ -432,7 +436,13 @@ let CF=0;function confetti(n=180){const my=++CF,c=$('#fx'),x=c.getContext('2d');
 function stopFX(){CF++;const c=$('#fx');c.getContext('2d').clearRect(0,0,c.width,c.height)}
 /* screens */
 let RID=0;
-function show(id){RID++;stopFX();document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));$('#lens').style.display='none'}
+function show(id){RID++;stopFX();document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));$('#lens').style.display='none';setTimeout(fit,30)}
+/* экранға сыйдыру */
+let fitT;function fit(){if(innerWidth<=820){document.querySelectorAll('.stage').forEach(s=>s.style.zoom='');return}
+  const sc=document.querySelector('.screen.on');if(!sc)return;const st=sc.querySelector('.stage');if(!st)return;st.style.zoom=1;
+  const top=st.getBoundingClientRect().top,need=st.scrollHeight,avail=innerHeight-top-4;const z=Math.min(1,avail/need);st.style.zoom=z<.99?z.toFixed(3):1}
+const fitSoon=()=>{clearTimeout(fitT);fitT=setTimeout(fit,60)};addEventListener('resize',fitSoon);
+new MutationObserver(fitSoon).observe(document.body,{childList:true,subtree:true});
 /* drag & tap */
 let SEL=null;
 function draggable(card,targets,onDrop){
@@ -544,10 +554,11 @@ function startArt(){show('art');const id=RID;$('#artfin').classList.remove('on')
   ART_W.forEach(([e,w,k])=>{const c=el('div','card',`<span class="e">${e}</span>${w}`);c.dataset.w=w;c.dataset.e=e;bank.append(c);
     draggable(c,()=>[cv],(t,ev)=>{if(c.classList.contains('used'))return;const r=cv.getBoundingClientRect();put(c,(ev.clientX-r.left)/r.width*100,(ev.clientY-r.top)/r.height*100)})});
   cv.addEventListener('click',ev=>{if(!SEL||!bank.contains(SEL)||SEL.classList.contains('used'))return;const c=SEL;SEL.classList.remove('sel');SEL=null;const r=cv.getBoundingClientRect();put(c,(ev.clientX-r.left)/r.width*100,(ev.clientY-r.top)/r.height*100)});
-  function put(c,x,y){x=Math.max(5,Math.min(95,x));y=Math.max(8,Math.min(92,y));const st=el('div','stk',`<span class="se">${c.dataset.e}</span><span class="sw">${c.dataset.w}</span>`);st.style.left=x+'%';st.style.top=y+'%';cv.append(st);c.classList.add('used');c.dataset.off=1;placed.push(c.dataset.w);sfx.ok();check()}
-  let btn=null;function check(){if(placed.length>=4&&colored.size>=2&&!btn){btn=el('button','chip','✨ 2-қадам: сөйлем құрастыр ➜');btn.style.cssText='background:var(--green);color:#fff;font-size:clamp(20px,2vw,30px)';btn.onclick=step2;$('#arthint').after(btn);re(btn,'pop')}}
-  $('#arthint').textContent='Түсті таңдап, үйлерді бояп шық. Сөздерді суреттің кез келген жеріне сүйреп апар (кемінде 4 сөз, 2 үй)!';
-  function step2(){btn.remove();$('#artbank').style.display='none';$('#arthint').style.display='none';$('#artstep').textContent='2-қадам: қалашық туралы 2 сөйлем';
+  function put(c,x,y){x=Math.max(5,Math.min(95,x));y=Math.max(8,Math.min(92,y));const st=el('div','stk',`<span class="se">${c.dataset.e}</span><span class="sw">${c.dataset.w}</span><b class="sx">✕</b>`);st.style.left=x+'%';st.style.top=y+'%';cv.append(st);c.classList.add('used');delete c.dataset.off;c.dataset.off2=1;placed.push(c.dataset.w);sfx.ok();
+    st.addEventListener('click',e=>{e.stopPropagation();if(stepped)return;st.remove();c.classList.remove('used');const k=placed.indexOf(c.dataset.w);if(k>=0)placed.splice(k,1);sfx.tap();toast('Сөз орнына қайтты ↩','');if(btn&&placed.length<4){btn.remove();btn=null}});check()}
+  let btn=null,stepped=false;function check(){if(placed.length>=4&&colored.size>=2&&!btn){btn=el('button','chip','✨ 2-қадам: сөйлем құрастыр ➜');btn.style.cssText='background:var(--green);color:#fff;font-size:clamp(20px,2vw,30px)';btn.onclick=step2;$('#arthint').after(btn);re(btn,'pop')}}
+  $('#arthint').textContent='Түсті таңдап, үйлерді бояп шық. Сөздерді суретке сүйреп апар (кемінде 4 сөз, 2 үй). Қате қойсаң – сөзді басып, қайтарып ал ✕';$('#art').classList.remove('locked');
+  function step2(){stepped=true;$('#art').classList.add('locked');btn.remove();$('#artbank').style.display='none';$('#arthint').style.display='none';$('#artstep').textContent='2-қадам: қалашық туралы 2 сөйлем';
     const pool=ART_S.filter(S=>placed.includes(S.need));const two=pick(pool.length>=2?pool:ART_S,2);let si=0;const out=[];const T=$('#arttask');T.style.display='flex';
     function one(){if(RID!==id)return;if(si>=2)return fin();const S=two[si];const chosen=[];
       T.innerHTML=`<div class="tq">${si+1}-сөйлем: суреттегі <span class="who">${S.need}</span> туралы сөйлем құрастыр</div><div class="slots"></div><div class="bank"></div><div class="acts"><button class="chip clr">↺ Тазалау</button><button class="chip">✅ Тексеру</button></div>`;
@@ -625,13 +636,15 @@ function startScale(){show('scale');const id=RID;$('#sclfin').classList.remove('
 
 /* ================= 5. FALCON ================= */
 const TEAMS=[{n:'Сұңқар',i:'🦅',c:'#e8483f'},{n:'Қыран',i:'🦉',c:'#2f6fe4'},{n:'Тұйғын',i:'🐦',c:'#2fae5b'},{n:'Ителгі',i:'🕊️',c:'#9b59b6'}];
-const LR=['лашын','лағыл','лебіз','рақмет','рақат','рең','рақым','Іле','ілгіш','ілесу','ірі','ірімшік','ылди','ылғал','ілгек','ілгері','ырыс','ылғи'];
-const QS=[{q:'1. Лашын қандай құс?',w:['Лашын','–','жыртқыш','құс.'],x:['үй','баяу'],ok:[['Лашын','–','жыртқыш','құс.']]},
- {q:'2. Оның түсі, көзі қандай?',w:['Түсі','қоңыр,','көзі','өткір.'],x:['жасыл','ұзын'],ok:[['Түсі','қоңыр,','көзі','өткір.']]},
- {q:'3. Ал тырнақтары қандай?',w:['Тырнақтары','өткір','әрі','мықты.'],x:['жұмсақ','кішкентай'],ok:[['Тырнақтары','өткір','әрі','мықты.']]},
- {q:'4. Оны неліктен жыртқыш құс деп атайды?',w:['Ол','ұсақ','құстар','мен','тышқандарды','аулайды.'],x:['жейді','ұйықтайды'],ok:[['Ол','ұсақ','құстар','мен','тышқандарды','аулайды.']]}];
+const LR=['лашын','лағыл','лебіз','рақмет','рақат','рақым','ілгіш','ілесу','ірімшік','ылғал','ілгек','ілгері','ырыс','қарлығаш','ерлік','құрылыс','балалар','жолбарыс','бүркіт','ормандағы','жарлылар','сырғалар','ұлпалар','шырылдады'];
+const QS=[{q:'1. Лашын қандай құс?',w:['Лашын','–','жылдам','ұшатын','жыртқыш','құс.'],x:['құстар','жыртқыштар','лашынның','баяу'],ok:[['Лашын','–','жылдам','ұшатын','жыртқыш','құс.']]},
+ {q:'2. Оның түсі, көзі қандай?',w:['Лашынның','түсі','қоңыр,','көзі','өткір.'],x:['түстері','көздері','жасыл','Лашын']},
+ {q:'3. Ал тырнақтары қандай?',w:['Оның','тырнақтары','өткір','әрі','мықты.'],x:['тырнақ','өткірі','жұмсақ','Ол']},
+ {q:'4. Оны неліктен жыртқыш құс деп атайды?',w:['Себебі','ол','ұсақ','құстар','мен','тышқандарды','аулайды.'],x:['тышқандар','құсты','аулады','шөп']}];
+QS.forEach(Q=>{Q.ok=Q.ok||[Q.w]});
+
 const lrColor=w=>[...w].map(ch=>/[лЛ]/.test(ch)?`<span class="L-c">${ch}</span>`:/[рР]/.test(ch)?`<span class="R-c">${ch}</span>`:ch).join('');
-function falconSVG(){let f='';const N=12;for(let i=0;i<N;i++){const a=-70+i*9.5;f+=`<path class="fth" data-i="${i}" d="M0 0 C 18 -20, 30 -110, 6 -175 C -8 -110, -14 -30, 0 0Z" fill="#8d6e63" stroke="#4e342e" stroke-width="3" transform="translate(250 170) rotate(${a})"/>`}
+function falconSVG(){let f='';const N=16;for(let i=0;i<N;i++){const a=-75+i*7.6;f+=`<path class="fth" data-i="${i}" d="M0 0 C 18 -20, 30 -110, 6 -175 C -8 -110, -14 -30, 0 0Z" fill="#8d6e63" stroke="#4e342e" stroke-width="3" transform="translate(250 170) rotate(${a})"/>`}
   return `<svg viewBox="0 0 560 420"><g class="wing">${f}</g>
   <path d="M120 300 L40 380 L70 384 L60 410 L120 360 L150 330Z" fill="#6d4c41" stroke="#3e2723" stroke-width="4"/>
   <ellipse cx="250" cy="250" rx="140" ry="92" fill="#a1887f" stroke="#4e342e" stroke-width="5"/>
@@ -653,15 +666,20 @@ function startFalcon(){show('falcon');const id=RID;$('#flfin').classList.remove(
   const setAct=i=>{tEl.forEach((t,k)=>t.classList.toggle('act',k===i));if(TEAMS[i])task.style.setProperty('--c',TEAMS[i].c)};
   const feather=i=>{sc[i]++;tEl[i].querySelector('.fe').textContent='🪶 '+sc[i];const f=bird.querySelector(`.fth[data-i="${fi++}"]`);if(f){f.classList.add('on');f.setAttribute('fill',TEAMS[i].c)}re(tEl[i],'pop')};
   /* round 1: Л ма, Р ма? */
-  const words=pick(LR,8);let turn=0;$('#flround').textContent='1-кезең · Л ма, Р ма?';
-  function r1(){if(RID!==id)return;if(turn>=8)return r2start();const ti=turn%4;setAct(ti);const w=words[turn];const p=[...w].findIndex(c=>/[лрЛР]/.test(c));const L=w[p].toLowerCase();
-    task.innerHTML=`<div class="tq"><span class="who">${TEAMS[ti].i} ${TEAMS[ti].n}</span> тобы: бос орынға қай әріп керек?</div><div class="lword">${w.slice(0,p)}<span class="gap">?</span>${w.slice(p+1)}</div><div class="lr"><button class="L">Л</button><button class="R">Р</button></div>`;
-    let done=false;task.querySelectorAll('.lr button').forEach(b=>b.onclick=()=>{if(done)return;done=true;const v=b.className==='L'?'л':'р';const g=task.querySelector('.gap');g.innerHTML=`<span class="${L==='л'?'L-c':'R-c'}">${p===0?L.toUpperCase():L}</span>`;
-      if(v===L){sfx.ok();toast('Дұрыс! Қауырсын алдыңдар 🪶','good');feather(ti)}else{err++;sfx.bad();toast(`Дұрысы – ${L.toUpperCase()}`,'bad');re(task.querySelector('.lword'),'shake')}
-      turn++;setTimeout(r1,1500)})}
+  const words=pick(LR.filter(w=>(w.match(/[лрЛР]/g)||[]).length>=2),8);let turn=0;$('#flround').textContent='1-кезең · Л ма, Р ма?';
+  function r1(){if(RID!==id)return;if(turn>=8)return r2start();const ti=turn%4;setAct(ti);const w=words[turn];
+    const pos=[...w].map((c,k)=>/[лрЛР]/.test(c)?k:-1).filter(k=>k>=0);let cur=0,done=false,left=25,tm;
+    const show=()=>[...w].map((c,k)=>pos.includes(k)?(pos.indexOf(k)<cur?`<span class="${/[лЛ]/.test(c)?'L-c':'R-c'}">${c}</span>`:`<span class="gap${pos.indexOf(k)===cur?' now':''}">?</span>`):c).join('');
+    task.innerHTML=`<div class="tq"><span class="who">${TEAMS[ti].i} ${TEAMS[ti].n}</span> тобы: барлық бос орынды толтыр! <span class="tmr">⏱ 25</span></div><div class="lword">${show()}</div><div class="lr"><button class="L">Л</button><button class="R">Р</button></div><div class="hint" style="color:#555">Бос орын саны: ${pos.length}. Бір қате – қауырсын жоқ!</div>`;
+    const lw=task.querySelector('.lword'),tmr=task.querySelector('.tmr');
+    const end=ok=>{if(done)return;done=true;clearInterval(tm);cur=pos.length;lw.innerHTML=show();
+      if(ok){sfx.ok();toast('Дұрыс! Қауырсын алдыңдар 🪶','good');feather(ti)}else{err++;sfx.bad();re(lw,'shake')}turn++;setTimeout(r1,1700)};
+    tm=setInterval(()=>{if(RID!==id)return clearInterval(tm);left--;tmr.textContent='⏱ '+left;tmr.classList.toggle('warn',left<=5);if(left<=0){toast('Уақыт бітті! ⏰','bad');end(false)}},1000);
+    task.querySelectorAll('.lr button').forEach(b=>b.onclick=()=>{if(done)return;const v=b.className==='L'?'л':'р';const need=w[pos[cur]].toLowerCase();
+      if(v!==need){toast(`Қате! Мұнда – ${need.toUpperCase()}`,'bad');return end(false)}sfx.tap();cur++;lw.innerHTML=show();if(cur>=pos.length)end(true)})}
   /* round 2: сипатта */
   let qi=0;function r2start(){$('#flround').textContent='2-кезең · Лашынды сипатта';r2()}
-  function r2(){if(RID!==id)return;if(qi>=4)return final();setAct(qi);const Q=QS[qi];let tries=0;const chosen=[];
+  function r2(){if(RID!==id)return;if(qi>=4)return final();setAct(qi);const Q=QS[qi];let tries=0;const maxTry=2;const chosen=[];
     task.innerHTML=`<div class="tq"><span class="who">${TEAMS[qi].i} ${TEAMS[qi].n}</span> тобының сұрағы:<br>${Q.q}</div><div class="slots"></div><div class="bank"></div><div class="acts"><button class="chip clr">↺ Тазалау</button><button class="chip">✅ Тексеру</button></div><div class="hint" style="color:#555">Сөздерді дұрыс ретпен басып, жауап-сөйлем құра. <span class="L-c">Л</span> мен <span class="R-c">Р</span> әріптеріне назар аудар!</div>`;
     const slots=task.querySelector('.slots'),bank=task.querySelector('.bank');
     const draw=()=>{slots.innerHTML='';chosen.forEach((b,k)=>{const s=el('button','wt',lrColor(b.dataset.w));s.onclick=()=>{chosen.splice(k,1);b.classList.remove('used');sfx.tap();draw()};slots.append(s)})};
