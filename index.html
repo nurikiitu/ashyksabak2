@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>Сөздер қалашығына саяхат</title>
+<title>Дауыссыз Л мен Р</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#1d2340;--cream:#fff6e4;--red:#e8483f;--blue:#2f6fe4;--gold:#ffc83d;--green:#2fae5b;--paper:#fdf3dc}
@@ -287,12 +287,48 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:950}
 .setup input{flex:1;min-width:0;font:900 clamp(20px,2.2vw,34px) Nunito,sans-serif;border:none;border-bottom:4px dashed #cfd8dc;outline:none;padding:4px;user-select:text;-webkit-user-select:text;color:var(--ink)}
 .mopts{display:flex;flex-direction:column;gap:10px;width:min(1000px,100%)}
 .mopts .wt{text-align:left;font-size:clamp(20px,2vw,32px)}.mopts .wt.okm{background:#c8f7c5;box-shadow:0 5px 0 #2e7d32}.mopts .wt.nom{background:#ffcdd2}
+
+/* ---------- new STREAM ---------- */
+.qbanner{background:var(--cream);border-radius:16px;padding:6px 22px;font-weight:900;font-size:clamp(18px,1.8vw,28px);box-shadow:0 5px 0 rgba(0,0,0,.25);position:relative;z-index:3}
+.card.fact{font-size:clamp(22px,2.2vw,36px);white-space:normal;max-width:min(900px,90vw);text-align:center}
+.cols48{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:min(1200px,100%)}
+.cols48 div{background:#f4f6f8;border-radius:16px;padding:12px 16px;font-weight:800;font-size:clamp(18px,1.8vw,28px);line-height:1.5}
+.cols48 b{display:block;color:#636e72;margin-bottom:4px}
+.evsep{flex-basis:100%;border-top:3px dashed rgba(90,61,16,.4);margin:4px 0}
+#eng{background:#0d47a1;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:32px 32px}
+.engrow{display:flex;gap:24px;align-items:center;width:min(1600px,97vw);flex:1}
+.blueprint{position:relative;flex:1.3;max-width:820px;margin:auto}
+.blueprint svg{width:100%;height:auto;filter:drop-shadow(0 0 2px #bbdefb)}
+.hot{position:absolute;transform:translate(-50%,-50%);width:clamp(46px,4.4vw,64px);height:clamp(46px,4.4vw,64px);border-radius:50%;background:rgba(255,255,255,.18);border:4px dashed #fff;display:grid;place-items:center;color:#fff;font-weight:900;font-size:clamp(20px,2vw,30px);transition:.2s}
+.hot.over{background:rgba(255,213,79,.6);transform:translate(-50%,-50%) scale(1.2)}
+.hot.ok{width:auto;height:auto;border-radius:14px;border:4px solid #ffd54f;background:#fff;color:var(--ink);padding:4px 10px;font-size:clamp(13px,1.2vw,19px);z-index:3}
+.hot.ok em{font-style:normal;white-space:nowrap}
+.engtray{flex:1;display:flex;flex-direction:column;gap:12px}
+.engtray .card{font-size:clamp(18px,1.8vw,28px);white-space:normal}
+#artf{background:#f6ead2;background-image:radial-gradient(rgba(150,100,40,.12) 1.4px,transparent 1.5px);background-size:16px 16px}
+#artf .bar h2{color:#5b3a12;text-shadow:none}#artf .chip.ghost{color:#5b3a12;border-color:#c9a26b;background:#fff3dc}
+.artrow{display:flex;gap:20px;align-items:stretch;width:min(1500px,97vw);flex:1;justify-content:center}
+.artcard{flex:1;max-width:1000px;background:#fff;border:12px solid #8b5e34;border-radius:14px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:10px;box-shadow:0 10px 0 rgba(0,0,0,.18)}
+.artcard .desc{font-size:clamp(17px,1.7vw,26px);font-weight:800;text-align:center}.artcard .desc i{font-style:normal;color:#e67e22;font-weight:900}
+.canvasbird{width:min(600px,100%);flex:1;display:block}.canvasbird svg{display:block;width:100%;height:auto;max-height:52vh}
+.canvasbird .part{cursor:pointer;transition:fill .3s}.canvasbird .part:hover{stroke:#e67e22;stroke-width:7}
+.part.blink{animation:blinkp .3s 4 alternate}@keyframes blinkp{to{opacity:.2}}
+.chip.go{background:var(--green);color:#fff;font-size:clamp(20px,2vw,30px)}
+.palette2{display:flex;flex-direction:column;gap:10px;justify-content:center}
+.palette2 button{display:flex;align-items:center;gap:10px;background:#fff;border-radius:16px;padding:8px 14px;font-weight:900;font-size:clamp(16px,1.6vw,24px);box-shadow:0 5px 0 rgba(0,0,0,.2);border:4px solid transparent}
+.palette2 button i{width:34px;height:34px;border-radius:50%;border:3px solid #555;display:block}.palette2 button.on{border-color:var(--gold);transform:scale(1.06)}
+.nest{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 20px;border-radius:30px;border:6px dashed #c9a26b;transition:.2s}
+.nest.over{background:#fff3c4}.canvasbird.small{width:min(320px,60vw)}
+.nestin{display:flex;gap:8px;font-size:clamp(34px,3.4vw,54px);min-height:60px}
+.nestlbl{font-weight:900;color:#8b5e34;font-size:clamp(16px,1.5vw,22px)}
+.preytray{display:flex;flex-direction:column;gap:10px;justify-content:center}
+.preytray .card{font-size:clamp(18px,1.8vw,28px)}
 @media(max-width:820px){
   .mapbox{width:94vw;aspect-ratio:auto;height:auto;display:flex;flex-direction:column;gap:18px;align-items:center;margin-top:20px}
   .mapbox svg.road,.bus,.deco{display:none}
   .stop{position:static;transform:none;flex-direction:row;gap:14px;width:100%;max-width:420px;background:rgba(255,255,255,.55);border-radius:24px;padding:10px}
   .stop .disc{width:74px;height:74px;font-size:38px;border-width:5px}.stop .lab{font-size:17px;white-space:normal}
-  .labrow,.houses,.factory{flex-direction:column;align-items:center;gap:20px}.artwrap{flex-direction:column}.palette{flex-direction:row;flex-wrap:wrap}
+  .labrow,.houses,.factory,.engrow,.artrow{flex-direction:column;align-items:center;gap:20px}.palette2,.preytray{flex-direction:row;flex-wrap:wrap}.artwrap{flex-direction:column}.palette{flex-direction:row;flex-wrap:wrap}
   .desk{flex-direction:column}.folder{width:100%;max-height:none}
   .fl-grid{grid-template-columns:1fr;}.teams{flex-direction:row;flex-wrap:wrap}.team{flex:1 1 45%}
   .card{font-size:20px}.ptext{font-size:22px}.lens{display:none!important}.paper,.wd{cursor:pointer}
@@ -304,7 +340,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:950}
 <!-- ================= MAP ================= -->
 <section class="screen on" id="map">
   <div class="mapfoot"><button class="chip" onclick="toggleFS()">⛶ Толық экран</button><button class="chip" id="snd" onclick="toggleSnd()">🔊</button></div>
-  <div class="mapttl"><div class="ribbon">Сөздер қалашығына саяхат</div><div class="mapsub">2-сынып · Қазақ тілі · STREAM · Зат есім: Кім? Не?</div></div>
+  <div class="mapttl"><div class="ribbon">Дауыссыз Л мен Р · Лашын</div><div class="mapsub">2-сынып · Қазақ тілі · STREAM · 48–50-жаттығулар</div></div>
   <div class="mapbox" id="mapbox">
     <svg class="road" viewBox="0 0 1900 1000" preserveAspectRatio="none">
       <path d="M150 760 C 330 600, 420 860, 600 700 S 830 360, 980 520 S 1180 820, 1340 600 S 1560 240, 1740 300" fill="none" stroke="#b07a3a" stroke-width="70" stroke-linecap="round" opacity=".55"/>
@@ -319,85 +355,81 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:950}
   </div>
 </section>
 
-<!-- ================= 1. LAB ================= -->
-<section class="screen" id="lab">
-  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>🧪 Сөздер зертханасы</h2><span class="labcount chip ghost" id="labcnt">0 / 12</span></div>
-  <div class="stage">
+<!-- ================= S. SCIENCE ================= -->
+<section class="screen" id="sci">
+  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>🔬 S · Лашын қандай құс?</h2><span class="chip ghost" id="scicnt">0 / 8</span></div>
+  <div class="stage" id="scistage">
+    <div class="qbanner">49-жаттығу · 1-сұрақ: <b>Лашын қандай құс?</b></div>
     <div class="pipe"></div>
-    <div class="dispense" id="disp"></div>
-    <div class="hint">Сөзді ұстап, дұрыс колбаға сал! (немесе басып, сосын колбаны бас)</div>
-    <div class="labrow" id="labrow"></div>
+    <div class="dispense" id="scidisp"></div>
+    <div class="hint">Зерттеу: дерек дұрыс па, қате ме? Карточканы керек колбаға сал!</div>
+    <div class="labrow" id="scirow"></div>
+    <div class="task" id="scitask" style="display:none;--c:#16a085"></div>
   </div>
   <div class="shelf"></div>
-  <div class="fin" id="labfin"></div>
+  <div class="fin" id="scifin"></div>
 </section>
 
-<!-- ================= T. ROBOT ================= -->
-<section class="screen" id="robot">
-  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>🤖 Робот-сұрыптағыш</h2><span class="chip ghost" id="robcnt">0 / 10</span></div>
+<!-- ================= T. TECH (48) ================= -->
+<section class="screen" id="tech">
+  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>💻 T · 48-жаттығу: сөздерді салыстыр</h2><span class="chip ghost" id="techcnt">0 / 14</span></div>
   <div class="stage">
-    <div class="factory">
-      <div class="bin k" id="bink"><div class="bl">Кім?</div><div class="bitems"></div></div>
-      <div class="rob" id="rob">
-        <div class="siren" id="siren"></div>
-        <div class="rhead"><div class="rscreen" id="rscreen">🙂</div></div>
-        <div class="arm" id="arm"><div class="claw"></div><div class="held" id="held"></div></div>
+    <div class="factory" id="techfac">
+      <div class="bin k" id="tbinL"><div class="bl">Л, Р-дан<br>басталады</div><div class="bitems"></div></div>
+      <div class="rob" id="trob">
+        <div class="siren" id="tsiren"></div>
+        <div class="rhead"><div class="rscreen" id="tscreen">🙂</div></div>
+        <div class="arm" id="tarm"><div class="claw"></div><div class="held" id="theld"></div></div>
         <div class="rbody">⚙️</div>
       </div>
-      <div class="bin n" id="binn"><div class="bl">Не?</div><div class="bitems"></div></div>
+      <div class="bin n" id="tbinI"><div class="bl">Ы, І-ден<br>басталады</div><div class="bitems"></div></div>
     </div>
-    <div class="belt"><div class="belttrack" id="belt"></div></div>
-    <div class="rbtns"><button class="rb k" id="rbk">👤 Кім?</button><button class="rb n" id="rbn">📦 Не?</button></div>
+    <div class="belt" id="tbeltwrap"><div class="belttrack" id="tbelt"></div></div>
+    <div class="rbtns" id="tbtns"><button class="rb k" id="tbL">Л / Р ⬅</button><button class="rb n" id="tbI">➡ Ы / І</button></div>
+    <div class="task" id="techtask" style="display:none;--c:#636e72"></div>
   </div>
-  <div class="fin" id="robfin"></div>
+  <div class="fin" id="techfin"></div>
 </section>
 
-<!-- ================= 2. TOWN ================= -->
-<section class="screen" id="town">
-  <div class="stars" id="stars"></div><div class="moon"></div><div class="street"></div>
-  <div class="lamp" style="left:8%"></div><div class="lamp" style="left:50%"></div><div class="lamp" style="right:8%"></div>
-  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>🏘️ Сөздер қалашығын тұрғыз</h2><span class="chip ghost" id="towncnt">0 / 12</span></div>
+<!-- ================= R. READING ================= -->
+<section class="screen" id="read">
+  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>📖 R · Оның түсі, көзі қандай?</h2><span class="chip ghost" id="readmode">1-тапсырма</span></div>
   <div class="stage">
-    <div class="hint">Әр сөзді өз үйіне апар — терезесінде шам жанады!</div>
-    <div class="houses" id="houses"></div>
-    <div class="tray" id="tray"></div>
-  </div>
-  <div class="fin" id="townfin"></div>
-</section>
-
-<!-- ================= 3. DETECTIVE ================= -->
-<section class="screen" id="det">
-  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>🔍 Мәтін детективтері</h2><span class="chip ghost">🕵️ Зат есімдерді тап!</span></div>
-  <div class="stage">
-    <div class="tabs" id="tabs"></div>
     <div class="desk">
-      <div class="paper" id="paper"><h4>— ҚҰПИЯ МӘТІН —</h4><div class="ptext" id="ptext"></div></div>
-      <div class="folder"><h5>🗂 Айғақтар</h5><div class="ev" id="ev"></div><div class="meter" id="meter"></div></div>
+      <div class="paper" id="rpaper"><h4>— ЛАШЫН —</h4><div class="ptext" id="rtext"></div></div>
+      <div class="folder"><h5 id="rfh">🔎 Тап:</h5><div class="ev" id="rev"></div><div class="meter" id="rmeter"></div></div>
     </div>
-    <div class="hint" style="color:#f3d9b1">Зат есімді үлкейткішпен тауып бас, сосын оған «Кім?» не «Не?» сұрағын қой</div>
+    <div class="hint" style="color:#f3d9b1" id="rhint"></div>
+    <div class="task" id="readtask" style="display:none;--c:#8b5e34"></div>
   </div>
   <div class="lens" id="lens"></div>
-  <div class="fin" id="detfin"></div>
+  <div class="fin" id="readfin"></div>
+</section>
+
+<!-- ================= E. ENGINEERING ================= -->
+<section class="screen" id="eng">
+  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>🛠️ E · Ал тырнақтары қандай?</h2><span class="chip ghost" id="engcnt">0 / 5</span></div>
+  <div class="stage">
+    <div class="qbanner" style="background:#e3f2fd">Лашынның сызбасын құрастыр: әр сипаттаманы дене мүшесіне апар!</div>
+    <div class="engrow"><div class="blueprint" id="bp"></div><div class="engtray" id="engtray"></div></div>
+    <div class="task" id="engtask" style="display:none;--c:#1565c0"></div>
+  </div>
+  <div class="fin" id="engfin"></div>
 </section>
 
 <!-- ================= A. ART ================= -->
-<section class="screen" id="art">
-  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>🎨 Сиқырлы қалашық</h2><span class="chip ghost" id="artstep">1-қадам: суретті жандандыр</span></div>
+<section class="screen" id="artf">
+  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>🎨 A · Оны неліктен жыртқыш құс деп атайды?</h2><span class="chip ghost" id="artstep">1-қадам: боя</span></div>
   <div class="stage">
-    <div class="artwrap">
-      <div class="canvasart" id="canvasart"></div>
-      <div class="palette" id="palette"></div>
-    </div>
-    <div class="artbank" id="artbank"></div>
-    <div class="hint" style="color:#5b3a12" id="arthint">Үйлерді бояу үшін түсті таңдап, үйді бас. Сөздерді суреттің кез келген жеріне сүйреп апар!</div>
+    <div class="artrow" id="artrow"></div>
     <div class="task" id="arttask" style="display:none;--c:#e67e22"></div>
   </div>
   <div class="fin" id="artfin"></div>
 </section>
 
-<!-- ================= 4. SCALE ================= -->
+<!-- ================= M. MATH ================= -->
 <section class="screen" id="scale">
-  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>⚖️ Сөз таразысы</h2><div class="rounds" id="rounds"></div></div>
+  <div class="bar"><button class="chip" onclick="toMap()">🗺 Карта</button><h2>⚖️ M · Л мен Р таразысы</h2><div class="rounds" id="rounds"></div></div>
   <div class="stage">
     <div class="scl" id="scl"><div class="post"></div><div class="base"></div><div class="beam" id="beam"></div><div class="pivot"></div></div>
     <div class="qpanel" id="qpanel"></div>
@@ -476,13 +508,13 @@ const ALL=[...KIM.map(x=>[...x,'k']),...NE.map(x=>[...x,'n'])];
 const DONE=new Set();
 
 /* ================= MAP ================= */
-const STOPS=[{id:'lab',L:'S',f:0,ic:'🧪',n:'Зертхана',s:'Science · Зерттеу',c:'#16a085',go:startLab},
- {id:'robot',L:'T',f:.17,ic:'🤖',n:'Робот',s:'Technology',c:'#636e72',go:startRobot},
- {id:'det',L:'R',f:.34,ic:'🔍',n:'Детективтер',s:'Reading · Оқылым',c:'#8b5e34',go:startDet},
- {id:'town',L:'E',f:.5,ic:'🏘️',n:'Қалашық',s:'Engineering',c:'#e8483f',go:startTown},
- {id:'art',L:'A',f:.66,ic:'🎨',n:'Сиқырлы сурет',s:'Art · Өнер',c:'#e67e22',go:startArt},
- {id:'scale',L:'M',f:.82,ic:'⚖️',n:'Таразы',s:'Math · Есеп',c:'#d4a017',go:startScale},
- {id:'falcon',L:'★',f:1,ic:'🦅',n:'Лашын шыңы',s:'4 топ · Л мен Р',c:'#2f6fe4',go:startFalcon,sp:1}];
+const STOPS=[{id:'sci',L:'S',f:0,ic:'🔬',n:'Зерттеу',s:'1-сұрақ: Қандай құс?',c:'#16a085',go:startSci},
+ {id:'tech',L:'T',f:.17,ic:'💻',n:'Технология',s:'48-жаттығу',c:'#636e72',go:startTech},
+ {id:'read',L:'R',f:.34,ic:'📖',n:'Оқылым',s:'2-сұрақ: Түсі, көзі',c:'#8b5e34',go:startRead},
+ {id:'eng',L:'E',f:.5,ic:'🛠️',n:'Құрастыру',s:'3-сұрақ: Тырнақтары',c:'#1565c0',go:startEng},
+ {id:'artf',L:'A',f:.66,ic:'🎨',n:'Өнер',s:'4-сұрақ: Неліктен?',c:'#e67e22',go:startArt},
+ {id:'scale',L:'M',f:.82,ic:'⚖️',n:'Математика',s:'Л мен Р таразысы',c:'#d4a017',go:startScale},
+ {id:'falcon',L:'★',f:1,ic:'🦅',n:'Лашын шыңы',s:'4 топ · жарыс',c:'#2f6fe4',go:startFalcon,sp:1}];
 (function(){const ns='http://www.w3.org/2000/svg',pth=document.createElementNS(ns,'path');pth.setAttribute('d','M150 760 C 330 600, 420 860, 600 700 S 830 360, 980 520 S 1180 820, 1340 600 S 1560 240, 1740 300');
   const svg=document.createElementNS(ns,'svg');svg.style.position='absolute';svg.style.width=0;svg.style.height=0;svg.append(pth);document.body.append(svg);const T=pth.getTotalLength();
   STOPS.forEach(S=>{const q=pth.getPointAtLength(T*S.f);S.x=q.x/19;S.y=q.y/10});svg.remove()})();
@@ -494,153 +526,155 @@ function drawMap(){const mb=$('#mapbox');mb.querySelectorAll('.stop').forEach(s=
 function moveBus(i){busAt=i;const bus=$('#bus');bus.style.left=STOPS[i].x+'%';bus.style.top=(STOPS[i].y-4)+'%'}
 function toMap(){show('map');drawMap()}
 
-/* ================= 1. LAB ================= */
+/* ================= колба ================= */
 const FLASK_P='M78 6 h44 v74 l72 150 q9 24 -16 24 h-156 q-25 0 -16 -24 l72 -150 z';
 function flaskSVG(id,col){let b='';for(let i=0;i<7;i++)b+=`<circle class="bub" cx="${40+rnd(0,120)}" cy="${235-rnd(0,20)}" r="${rnd(4,9)}" fill="rgba(255,255,255,.7)" style="animation-delay:${(Math.random()*2.4).toFixed(2)}s"/>`;
   return `<svg viewBox="0 0 200 262"><defs><clipPath id="cp${id}"><path d="${FLASK_P}"/></clipPath><linearGradient id="lg${id}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".75"/><stop offset="1" stop-color="${col}"/></linearGradient></defs>
   <path d="${FLASK_P}" fill="rgba(255,255,255,.14)"/><g clip-path="url(#cp${id})"><g class="liq" style="transform:translateY(262px)"><rect x="0" y="0" width="200" height="262" fill="url(#lg${id})"/><path d="M0 6 Q25 -4 50 6 T100 6 T150 6 T200 6 V0 H0Z" fill="rgba(255,255,255,.35)"/></g><g class="bubs" style="opacity:0">${b}</g></g>
   <path d="${FLASK_P}" fill="none" stroke="#e6fbff" stroke-width="7" stroke-linejoin="round"/><rect x="70" y="0" width="60" height="12" rx="6" fill="#e6fbff"/><path d="M60 150 q10 -30 22 -40" stroke="rgba(255,255,255,.6)" stroke-width="6" fill="none" stroke-linecap="round"/></svg>`}
-function startLab(){show('lab');const id=RID;$('#labfin').classList.remove('on');let err=0;
-  const items=shuffle([...pick(KIM,6).map(x=>[...x,'k']),...pick(NE,6).map(x=>[...x,'n'])]);let i=0;const cnt={k:0,n:0};
-  const row=$('#labrow');row.innerHTML='';const F={};
-  [['k','Кім?','адамдар','#e8483f'],['n','Не?','заттар, жануарлар','#2f6fe4']].forEach(([k,t,s,c])=>{const f=el('div','flask',`<div class="puff"></div>${flaskSVG(k,c)}<div class="tag" style="--c:${c}">${t}<small>${s}</small></div>`);f.dataset.k=k;F[k]=f;row.append(f);tapTarget(f,(t,card)=>drop(t,card))});
-  const upd=()=>$('#labcnt').textContent=`${i} / ${items.length}`;
-  function next(){if(RID!==id)return;upd();const d=$('#disp');d.innerHTML='';if(i>=items.length)return finish();const [e,w,k]=items[i];
-    const c=el('div','card',`<span class="e">${e}</span>${w}`);c.dataset.k=k;d.append(c);draggable(c,()=>Object.values(F),t=>drop(t,c))}
-  function drop(f,c){if(!c.dataset.k||c.dataset.off)return;if(f.dataset.k!==c.dataset.k){err++;sfx.bad();re(f.querySelector('.puff'),'go');re(c,'shake');toast(c.dataset.k==='k'?'Бұл – адам! «Кім?» деп сұраймыз':'Бұл – зат! «Не?» деп сұраймыз','bad');return}
-    c.dataset.off=1;sfx.pour();cnt[f.dataset.k]++;const lv=262-Math.min(1,cnt[f.dataset.k]/6)*200;f.querySelector('.liq').style.transform=`translateY(${lv}px)`;f.querySelector('.bubs').style.opacity=1;
+/* ================= 49-жаттығу жауаптары ================= */
+const ANS=[{q:'Лашын қандай құс?',w:['Лашын','–','жылдам','ұшатын','жыртқыш','құс.'],x:['құстар','баяу','лашынның','үй']},
+ {q:'Оның түсі, көзі қандай?',w:['Лашынның','түсі','көкшіл-сұр,','көзі','өткір.'],x:['түстері','көздері','жасыл','Лашын']},
+ {q:'Ал тырнақтары қандай?',w:['Оның','тырнақтары','өткір','әрі','мықты.'],x:['тырнақ','өткірі','жұмсақ','Ол']},
+ {q:'Оны неліктен жыртқыш құс деп атайды?',w:['Себебі','ол','ұсақ','құстар','мен','тышқандарды','аулайды.'],x:['тышқандар','құсты','аулады','шөп']}];
+/* сөйлем құрастыру (ортақ) */
+function sentence(host,A,title,onDone,errRef){host.style.display='flex';const chosen=[];
+  host.innerHTML=`<div class="tq">✍️ ${title}<br><span class="who">${A.q}</span></div><div class="slots"></div><div class="bank"></div><div class="acts"><button class="chip clr">↺ Тазалау</button><button class="chip">✅ Тексеру</button></div><div class="hint" style="color:#555">Сөздерді ретімен басып, жауап-сөйлем құра. <span class="L-c">Л</span> мен <span class="R-c">Р</span> әріптеріне назар аудар!</div>`;
+  const slots=host.querySelector('.slots'),bank=host.querySelector('.bank');
+  const draw=()=>{slots.innerHTML='';chosen.forEach((b,k)=>{const s=el('button','wt',lrColor(b.dataset.w));s.onclick=()=>{chosen.splice(k,1);b.classList.remove('used');sfx.tap();draw()};slots.append(s)})};
+  shuffle([...A.w,...A.x]).forEach(w=>{const b=el('button','wt',lrColor(w));b.dataset.w=w;b.onclick=()=>{if(b.classList.contains('used'))return;b.classList.add('used');chosen.push(b);sfx.tap();draw()};bank.append(b)});
+  host.querySelector('.clr').onclick=()=>{chosen.splice(0).forEach(b=>b.classList.remove('used'));draw()};
+  host.querySelector('.acts .chip:not(.clr)').onclick=()=>{const s=chosen.map(b=>b.dataset.w);
+    if(s.length===A.w.length&&s.every((w,k)=>w===A.w[k])){sfx.ok();toast('Керемет сөйлем! ✨','good');host.querySelector('.acts').remove();setTimeout(onDone,900)}
+    else{errRef.n++;sfx.bad();re(slots,'shake');toast('Сөздердің ретін тексер 🤔','bad')}}}
+const storyBox=A=>`<div class="story"><b>📝 Жауап</b>${lrColor(A.w.join(' '))}</div>`;
+
+/* ================= S · 1-сұрақ ================= */
+const FACTS=[['Лашын – жыртқыш құс.',1],['Лашын өте жылдам ұшады.',1],['Лашын биік жартасқа ұя салады.',1],['Лашын – сұңқар тұқымдас құс.',1],
+ ['Лашын суда жүзіп жүреді.',0],['Лашын шөп пен дән жейді.',0],['Лашын – үй құсы.',0],['Лашын тек түнде ұшады.',0],['Лашынның көзі өте өткір.',1],['Лашын жерде баяу жорғалайды.',0]];
+function startSci(){show('sci');const id=RID;$('#scifin').classList.remove('on');const E={n:0};const items=shuffle([...pick(FACTS.filter(f=>f[1]),4),...pick(FACTS.filter(f=>!f[1]),4)]);let i=0;const cnt={1:0,0:0};
+  $('#scitask').style.display='none';const row=$('#scirow');row.style.display='';row.innerHTML='';const F={};$('#scidisp').style.display='';
+  [[1,'Дұрыс ✔','шын дерек','#2fae5b'],[0,'Қате ✘','жалған дерек','#e8483f']].forEach(([k,t,s,c])=>{const f=el('div','flask',`<div class="puff"></div>${flaskSVG('s'+k,c)}<div class="tag" style="--c:${c}">${t}<small>${s}</small></div>`);f.dataset.k=k;F[k]=f;row.append(f);tapTarget(f,(t,card)=>drop(t,card))});
+  const upd=()=>$('#scicnt').textContent=`${i} / ${items.length}`;
+  function next(){if(RID!==id)return;upd();const d=$('#scidisp');d.innerHTML='';if(i>=items.length)return step2();const [t,k]=items[i];
+    const c=el('div','card fact',`<span>${lrColor(t)}</span>`);c.dataset.k=k;d.append(c);draggable(c,()=>Object.values(F),t=>drop(t,c))}
+  function drop(f,c){if(!c.dataset.k||c.dataset.off)return;if(f.dataset.k!==c.dataset.k){E.n++;sfx.bad();re(f.querySelector('.puff'),'go');re(c,'shake');toast('Ойланып көр! 🤔','bad');return}
+    c.dataset.off=1;sfx.pour();cnt[f.dataset.k]++;f.querySelector('.liq').style.transform=`translateY(${262-Math.min(1,cnt[f.dataset.k]/4)*200}px)`;f.querySelector('.bubs').style.opacity=1;
     c.style.transition='.45s';c.style.transform='scale(.2) translateY(200px)';c.style.opacity=0;i++;setTimeout(next,450)}
-  function finish(){DONE.add('lab');sfx.win();Object.values(F).forEach(f=>re(f,'pop'));setTimeout(()=>{if(RID!==id)return;
-    finBox('#labfin',{icon:'💥🧪',title:'Тәжірибе сәтті өтті!',text:'Барлық сөз өз колбасында!',err,again:startLab,extra:`<div class="question">🔬 Зерттеу сұрағы:<br>Неліктен бір сөзге <span style="color:var(--red)">«Кім?»</span>, екіншісіне <span style="color:var(--blue)">«Не?»</span> сұрағын қоямыз?</div><br>`})},700)}
+  function step2(){if(RID!==id)return;row.style.display='none';$('#scidisp').style.display='none';
+    sentence($('#scitask'),ANS[0],'Зерттеу қорытындысы: сұраққа жауап жаз',()=>{DONE.add('sci');finBox('#scifin',{icon:'🔬',title:'Зерттеу аяқталды!',text:'Лашын туралы деректер тексерілді.',err:E.n,again:startSci,extra:storyBox(ANS[0])})},E)}
   next()}
 
-
-/* ================= T. ROBOT ================= */
-const PLAN6=[['🧑‍🍳','аспаз','k'],['⚽','доп','n'],['🎤','әнші','k'],['🌸','гүл','n'],['🧒','бала','k'],['🖊️','қалам','n']];
-function startRobot(){show('robot');const id=RID;$('#robfin').classList.remove('on');let err=0,i=0,busy=false;
-  const extra=shuffle([...pick(KIM.filter(x=>!['аспаз','әнші','бала'].includes(x[1])),2).map(x=>[...x,'k']),...pick(NE.filter(x=>!['доп','гүл','қалам'].includes(x[1])),2).map(x=>[...x,'n'])]);
-  const items=[...shuffle(PLAN6),...extra];const belt=$('#belt');belt.innerHTML='';
-  const cards=items.map(([e,w,k])=>{const c=el('div','card',`<span class="e">${e}</span>${w}`);c.dataset.k=k;belt.append(c);return c});
-  document.querySelectorAll('#robot .bitems').forEach(b=>b.innerHTML='');$('#held').innerHTML='';$('#rscreen').textContent='🙂';$('#rscreen').className='rscreen';$('#siren').className='siren';
-  const arm=$('#arm');arm.style.transform='translateX(-50%) rotate(0deg)';
-  const upd=()=>$('#robcnt').textContent=`${i} / ${items.length}`;
-  function feed(){if(RID!==id)return;upd();if(i>=items.length)return done();cards.forEach((c,k)=>c.classList.toggle('cur',k===i));
-    const c=cards[i];const bw=belt.parentElement.clientWidth;const off=bw/2-(c.offsetLeft+c.offsetWidth/2);belt.style.transform=`translateX(${off}px)`;busy=false;$('#rscreen').textContent='🤔';$('#rscreen').className='rscreen'}
+/* ================= T · 48-жаттығу ================= */
+const W48L=['Лашын','лағыл','лебіз','рақмет','рақат','рең','рақым'],W48I=['Іле','ілгіш','ілесу','ірі','ірімшік','ылди','ылғал'];
+function startTech(){show('tech');const id=RID;$('#techfin').classList.remove('on');const E={n:0};let i=0,busy=false;
+  $('#techtask').style.display='none';['techfac','tbeltwrap','tbtns'].forEach(x=>$('#'+x).style.display='');
+  const items=shuffle([...W48L.map(w=>[w,'L']),...W48I.map(w=>[w,'I'])]);const belt=$('#tbelt');belt.innerHTML='';
+  const cards=items.map(([w,k])=>{const c=el('div','card',`<span>${lrColor(w)}</span>`);c.dataset.k=k;c.dataset.w=w;belt.append(c);return c});
+  document.querySelectorAll('#tech .bitems').forEach(b=>b.innerHTML='');$('#theld').innerHTML='';const sc=$('#tscreen');sc.textContent='🙂';sc.className='rscreen';$('#tsiren').className='siren';
+  const arm=$('#tarm');arm.style.transform='translateX(-50%) rotate(0deg)';
+  const upd=()=>$('#techcnt').textContent=`${i} / ${items.length}`;
+  function feed(){if(RID!==id)return;upd();if(i>=items.length)return step2();cards.forEach((c,k)=>c.classList.toggle('cur',k===i));
+    const c=cards[i];const bw=belt.parentElement.clientWidth;belt.style.transform=`translateX(${bw/2-(c.offsetLeft+c.offsetWidth/2)}px)`;busy=false;sc.textContent='🤔';sc.className='rscreen'}
   function answer(k){if(busy||RID!==id||i>=items.length)return;const c=cards[i];busy=true;
-    if(k!==c.dataset.k){err++;sfx.bad();const sc=$('#rscreen');sc.textContent='ҚАТЕ!';sc.className='rscreen err';re($('#siren'),'on');$('#siren').classList.add('on');re($('#rob'),'shake');
-      toast(c.dataset.k==='k'?'Бұл – адам. «Кім?»':'Бұл – зат. «Не?»','bad');setTimeout(()=>{$('#siren').classList.remove('on');busy=false;sc.textContent='🤔';sc.className='rscreen'},1100);return}
-    sfx.ok();$('#siren').className='siren ok';$('#rscreen').textContent='😃';arm.style.transform='translateX(-50%) rotate(0deg) translateY(30px)';
-    setTimeout(()=>{if(RID!==id)return;$('#held').innerHTML='';const h=c.cloneNode(true);h.classList.remove('cur');$('#held').append(h);c.style.visibility='hidden';sfx.tap();
-      arm.style.transform=`translateX(-50%) rotate(${k==='k'?62:-62}deg)`;
-      setTimeout(()=>{if(RID!==id)return;$('#held').innerHTML='';const b=$(k==='k'?'#bink':'#binn');b.querySelector('.bitems').append(el('span','',h.textContent));re(b,'hit');sfx.pour();
-        arm.style.transform='translateX(-50%) rotate(0deg)';$('#siren').className='siren';i++;setTimeout(feed,450)},650)},450)}
-  $('#rbk').onclick=()=>answer('k');$('#rbn').onclick=()=>answer('n');
-  document.onkeydown=e=>{if(!$('#robot').classList.contains('on'))return;if(e.key==='ArrowLeft')answer('k');if(e.key==='ArrowRight')answer('n')};
-  function done(){DONE.add('robot');$('#rscreen').textContent='🥳';cards.forEach(c=>c.classList.remove('cur'));setTimeout(()=>{if(RID===id)finBox('#robfin',{icon:'🤖',title:'Робот жұмысын бітірді!',text:'Барлық сөз өз жәшігінде: адамдар – «Кім?», заттар – «Не?»',err,again:startRobot})},700)}
+    if(k!==c.dataset.k){E.n++;sfx.bad();sc.textContent='ҚАТЕ!';sc.className='rscreen err';$('#tsiren').classList.add('on');re($('#trob'),'shake');
+      toast('Сөздің бірінші әрпіне қара!','bad');setTimeout(()=>{$('#tsiren').classList.remove('on');busy=false;sc.textContent='🤔';sc.className='rscreen'},1100);return}
+    sfx.ok();$('#tsiren').className='siren ok';sc.textContent='😃';
+    setTimeout(()=>{if(RID!==id)return;const h=c.cloneNode(true);h.classList.remove('cur');$('#theld').innerHTML='';$('#theld').append(h);c.style.visibility='hidden';sfx.tap();
+      arm.style.transform=`translateX(-50%) rotate(${k==='L'?62:-62}deg)`;
+      setTimeout(()=>{if(RID!==id)return;$('#theld').innerHTML='';const b=$(k==='L'?'#tbinL':'#tbinI');b.querySelector('.bitems').append(el('span','',lrColor(c.dataset.w)));re(b,'hit');sfx.pour();
+        arm.style.transform='translateX(-50%) rotate(0deg)';$('#tsiren').className='siren';i++;setTimeout(feed,400)},600)},350)}
+  $('#tbL').onclick=()=>answer('L');$('#tbI').onclick=()=>answer('I');
+  document.onkeydown=e=>{if(!$('#tech').classList.contains('on'))return;if(e.key==='ArrowLeft')answer('L');if(e.key==='ArrowRight')answer('I')};
+  function step2(){if(RID!==id)return;['tbeltwrap','tbtns'].forEach(x=>$('#'+x).style.display='none');$('#techfac').style.display='none';const T=$('#techtask');T.style.display='flex';
+    const ok='Қазақ сөздері Л, Р әрпінен басталмайды: алдына Ы, І дыбысы қосылады (ілгіш, ірі). Л, Р-дан басталатын сөздер (рақмет, лағыл) – басқа тілден енген сөздер.';
+    const ops=shuffle([ok,'Л мен Р әріптері сөздің тек соңында ғана жазылады.','Ы, І-ден басталатын сөздердің бәрі – басқа тілден енген сөздер.']);
+    T.innerHTML=`<div class="cols48"><div><b>Л, Р-дан басталады</b>${W48L.map(lrColor).join(', ')}</div><div><b>Ы, І-ден басталады</b>${W48I.map(lrColor).join(', ')}</div></div><div class="tq">🤔 Екі бағанды салыстыр. Қандай қорытынды жасайсың?</div><div class="mopts">${ops.map(o=>`<button class="wt">${o}</button>`).join('')}</div>`;
+    T.querySelectorAll('.mopts .wt').forEach(b=>b.onclick=()=>{if(b.textContent!==ok){E.n++;sfx.bad();b.classList.add('nom');re(b,'shake');return}
+      b.classList.add('okm');sfx.ok();DONE.add('tech');setTimeout(()=>finBox('#techfin',{icon:'💻',title:'Қорытынды жасалды!',text:'',err:E.n,again:startTech,extra:`<div class="story"><b>📌 Ереже</b>${ok}</div>`}),900)})}
   setTimeout(feed,100)}
 
-/* ================= A. ART ================= */
-const ART_W=[['🧑‍⚕️','дәрігер','k'],['👩‍🏫','мұғалім','k'],['🧒','бала','k'],['🧑‍🍳','аспаз','k'],['👵','әже','k'],['🌳','ағаш','n'],['🌸','гүл','n'],['⚽','доп','n'],['☀️','күн','n'],['🐦','құс','n'],['🚗','машина','n'],['🐶','ит','n']];
-const ART_S=[{need:'дәрігер',w:['Дәрігер','ауруханада','жұмыс','істейді.']},{need:'мұғалім',w:['Мұғалім','мектепте','сабақ','береді.']},{need:'бала',w:['Балалар','саябақта','ойнайды.']},
- {need:'аспаз',w:['Аспаз','асханада','тамақ','пісіреді.']},{need:'құс',w:['Құс','ағашта','сайрайды.']},{need:'гүл',w:['Гүл','бақшада','өседі.']},{need:'күн',w:['Күн','жарқырап','тұр.']},
- {need:'ит',w:['Ит','үйді','күзетеді.']},{need:'доп',w:['Бала','доп','ойнайды.']},{need:'машина',w:['Машина','жолда','келеді.']},{need:'әже',w:['Әже','немересін','күтіп','отыр.']},{need:'ағаш',w:['Ағаш','саябақта','өседі.']}];
-const ART_X=['жүзеді','қыста','баяу','терезе','ұшады','кеше'];
-function artSVG(){const B='class="bld" stroke="#555" stroke-width="3" fill="#ffffff"';return `<svg viewBox="0 0 900 400" preserveAspectRatio="none">
- <rect ${B} data-b="sky" width="900" height="262" stroke="none" fill="#eef3f7"/><rect ${B} data-b="grass" y="262" width="900" height="138" stroke="none" fill="#f1f1f1"/>
- <path ${B} data-b="road" d="M0 302 Q450 262 900 302 V334 Q450 294 0 334Z" stroke="none" fill="#dddddd"/>
- <path ${B} data-b="cloud" d="M120 60 q10 -26 36 -18 q14 -22 40 -6 q30 -6 30 20 q18 8 4 22 h-104 q-22 -4 -6 -18z"/>
- <circle ${B} data-b="sun" cx="850" cy="58" r="32"/>
- <rect ${B} data-b="hosp" x="40" y="130" width="190" height="140"/><rect ${B} data-b="hospr" x="30" y="114" width="210" height="18" rx="4"/>
- <rect ${B} data-b="hospd" x="112" y="210" width="46" height="60"/><rect ${B} data-b="hospw1" x="56" y="150" width="40" height="34"/><rect ${B} data-b="hospw2" x="174" y="150" width="40" height="34"/>
- <path ${B} data-b="cross" d="M127 146 h16 v14 h14 v16 h-14 v14 h-16 v-14 h-14 v-16 h14z"/>
- <path ${B} data-b="sch" d="M300 140 h220 v130 h-220z"/><path ${B} data-b="schr" d="M290 140 L410 72 L530 140Z"/>
- <rect ${B} data-b="schd" x="390" y="212" width="40" height="58"/><rect ${B} data-b="schw1" x="320" y="162" width="44" height="36"/><rect ${B} data-b="schw2" x="456" y="162" width="44" height="36"/>
- <rect x="408" y="30" width="4" height="46" fill="#555"/><path ${B} data-b="flag" d="M412 30 h34 l-8 10 l8 10 h-34z"/>
- <rect ${B} data-b="home" x="610" y="170" width="140" height="100"/><path ${B} data-b="homer" d="M595 170 L680 108 L765 170Z"/>
- <rect ${B} data-b="chim" x="720" y="118" width="18" height="34"/><rect ${B} data-b="homed" x="665" y="215" width="32" height="55"/><rect ${B} data-b="homew" x="622" y="188" width="32" height="28"/>
- <rect ${B} data-b="trunk" x="808" y="190" width="14" height="50"/><circle ${B} data-b="crown" cx="815" cy="170" r="34"/>
- <rect ${B} data-b="bench" x="790" y="246" width="100" height="14" rx="5"/><rect x="798" y="260" width="6" height="14" fill="#555"/><rect x="876" y="260" width="6" height="14" fill="#555"/>
- <path ${B} data-b="flower" d="M270 300 m-10 0 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0"/><path ${B} data-b="fence" d="M560 262 h40 v-30 l5 -8 l5 8 v30 h10 v-30 l5 -8 l5 8 v30"/>
- <g pointer-events="none" font-weight="900" fill="#333" text-anchor="middle"><text x="135" y="106" font-size="22">АУРУХАНА</text><text x="410" y="128" font-size="19">МЕКТЕП</text><text x="680" y="98" font-size="20">ҮЙ</text><text x="840" y="290" font-size="16">САЯБАҚ</text></g></svg>`}
-function startArt(){show('art');const id=RID;$('#artfin').classList.remove('on');let err=0,placed=[];const cv=$('#canvasart');cv.innerHTML=artSVG();cv.classList.remove('gray');
-  $('#arttask').style.display='none';$('#artbank').style.display='';$('#arthint').style.display='';$('#artstep').textContent='1-қадам: суретті жандандыр';
-  const bank=$('#artbank');const COLS=['#ef5350','#ffa726','#ffee58','#66bb6a','#42a5f5','#ab47bc','#8d6e63','#f8bbd0'];let col=COLS[0];const pal=$('#palette');pal.innerHTML='';
-  COLS.forEach((c,k)=>{const b=el('button',k?'':'on');b.style.background=c;b.onclick=()=>{col=c;pal.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));sfx.tap()};pal.append(b)});
-  cv.querySelectorAll('.bld').forEach(b=>{b.addEventListener('click',ev=>{if(SEL&&bank.contains(SEL))return;b.setAttribute('fill',col);sfx.pour();colored.add(b.dataset.b);check()})});const colored=new Set();
-  bank.innerHTML='';
-  ART_W.forEach(([e,w,k])=>{const c=el('div','card',`<span class="e">${e}</span>${w}`);c.dataset.w=w;c.dataset.e=e;bank.append(c);
-    draggable(c,()=>[cv],(t,ev)=>{if(c.classList.contains('used'))return;const r=cv.getBoundingClientRect();put(c,(ev.clientX-r.left)/r.width*100,(ev.clientY-r.top)/r.height*100)})});
-  cv.addEventListener('click',ev=>{if(!SEL||!bank.contains(SEL)||SEL.classList.contains('used'))return;const c=SEL;SEL.classList.remove('sel');SEL=null;const r=cv.getBoundingClientRect();put(c,(ev.clientX-r.left)/r.width*100,(ev.clientY-r.top)/r.height*100)});
-  function put(c,x,y){x=Math.max(5,Math.min(95,x));y=Math.max(8,Math.min(92,y));const st=el('div','stk',`<span class="se">${c.dataset.e}</span><span class="sw">${c.dataset.w}</span><b class="sx">✕</b>`);st.style.left=x+'%';st.style.top=y+'%';cv.append(st);c.classList.add('used');delete c.dataset.off;c.dataset.off2=1;placed.push(c.dataset.w);sfx.ok();
-    st.addEventListener('click',e=>{e.stopPropagation();if(stepped)return;st.remove();c.classList.remove('used');const k=placed.indexOf(c.dataset.w);if(k>=0)placed.splice(k,1);sfx.tap();toast('Сөз орнына қайтты ↩','');if(btn&&placed.length<4){btn.remove();btn=null}});check()}
-  let btn=null,stepped=false;function check(){if(placed.length>=4&&colored.size>=4&&!btn){btn=el('button','chip','✨ 2-қадам: сөйлем құрастыр ➜');btn.style.cssText='background:var(--green);color:#fff;font-size:clamp(20px,2vw,30px)';btn.onclick=step2;$('#arthint').after(btn);re(btn,'pop')}}
-  $('#arthint').textContent='Түсті таңдап, үйлерді бояп шық. Үйдің қабырғасын, шатырын, есігін, терезесін бөлек боя. Сөздерді суретке сүйреп апар (кемінде 4 сөз, 4 бөлік). Қате қойсаң – сөзді басып, қайтарып ал ✕';$('#art').classList.remove('locked');
-  function step2(){stepped=true;$('#art').classList.add('locked');btn.remove();$('#artbank').style.display='none';$('#arthint').style.display='none';$('#artstep').textContent='2-қадам: қалашық туралы 2 сөйлем';
-    const pool=ART_S.filter(S=>placed.includes(S.need));const two=pick(pool.length>=2?pool:ART_S,2);let si=0;const out=[];const T=$('#arttask');T.style.display='flex';
-    function one(){if(RID!==id)return;if(si>=2)return fin();const S=two[si];const chosen=[];
-      T.innerHTML=`<div class="tq">${si+1}-сөйлем: суреттегі <span class="who">${S.need}</span> туралы сөйлем құрастыр</div><div class="slots"></div><div class="bank"></div><div class="acts"><button class="chip clr">↺ Тазалау</button><button class="chip">✅ Тексеру</button></div>`;
-      const slots=T.querySelector('.slots'),bk=T.querySelector('.bank');
-      const draw=()=>{slots.innerHTML='';chosen.forEach((b,k)=>{const x=el('button','wt',b.dataset.w);x.onclick=()=>{chosen.splice(k,1);b.classList.remove('used');draw()};slots.append(x)})};
-      shuffle([...S.w,...pick(ART_X,2)]).forEach(w=>{const b=el('button','wt',w);b.dataset.w=w;b.onclick=()=>{if(b.classList.contains('used'))return;b.classList.add('used');chosen.push(b);sfx.tap();draw()};bk.append(b)});
-      T.querySelector('.clr').onclick=()=>{chosen.splice(0).forEach(b=>b.classList.remove('used'));draw()};
-      T.querySelector('.acts .chip:not(.clr)').onclick=()=>{const s=chosen.map(b=>b.dataset.w);if(s.join(' ')===S.w.join(' ')){sfx.ok();toast('Тамаша сөйлем! ✨','good');out.push(s.join(' '));si++;setTimeout(one,1000)}else{err++;sfx.bad();re(slots,'shake');toast('Сөздердің ретін тексер 🤔','bad')}}}
-    function fin(){DONE.add('art');T.style.display='none';finBox('#artfin',{icon:'🎨',title:'Сиқырлы қалашық дайын!',text:'',err,again:startArt,extra:`<div class="story"><b>🏙️ Біздің қалашық</b>${out.join(' ')}</div>`})}
-    one()}}
+/* ================= R · 2-сұрақ ================= */
+const RTEXT='Лашын – сұңқар тұқымдас жыртқыш құс. Оның арқасы *көкшіл-сұр/c, төсі *ақшыл/c, денесінде *қара/c дақтары бар. Басы *қараңғы/c. Көзі *үлкен/e әрі *өткір/e. Лашынның тұмсығы қысқа, имек. Тырнақтары өткір, мықты. Ол аспанда өте жылдам ұшады.';
+function startRead(){show('read');const id=RID;$('#readfin').classList.remove('on');const E={n:0};$('#readtask').style.display='none';$('#rpaper').parentElement.style.display='';
+  const P=$('#rtext');P.innerHTML='';const ev=$('#rev');ev.innerHTML='';let mode='c';const need={c:0,e:0},got={c:0,e:0};
+  RTEXT.split(' ').forEach(tok=>{const m=tok.match(/^\*([^/]+)\/(c|e)(.*)$/);let w,k=null,tail='';if(m){w=m[1];k=m[2];tail=m[3];need[k]++}else{const mm=tok.match(/^(.+?)([.,!?]*)$/);w=mm[1];tail=mm[2]}
+    const s=el('span','wd',lrColor(w));if(k)s.dataset.k=k;s.onclick=()=>hit(s);P.append(s);if(tail)P.append(tail);P.append(' ')});
+  const setMode=()=>{$('#readmode').textContent=mode==='c'?'1-тапсырма: түсі':'2-тапсырма: көзі';$('#rfh').textContent=mode==='c'?'🎨 Түсі қандай?':'👁 Көзі қандай?';
+    $('#rhint').textContent=mode==='c'?'Мәтінді оқы. Лашынның ТҮСІН білдіретін сөздерді тауып бас!':'Енді лашынның КӨЗІ қандай екенін білдіретін сөздерді тап!';meter()};
+  const meter=()=>$('#rmeter').innerHTML=`Табылды: ${got[mode]} / ${need[mode]}<div class="barx"><i style="width:${got[mode]/need[mode]*100}%"></i></div>`;
+  const paper=$('#rpaper'),lens=$('#lens');paper.onpointermove=e=>{if(innerWidth<=820)return;lens.style.display='block';lens.style.left=e.clientX+'px';lens.style.top=e.clientY+'px'};paper.onpointerleave=()=>lens.style.display='none';
+  function hit(s){if(s.classList.contains('found'))return;if(s.dataset.k!==mode){E.n++;sfx.bad();re(s,'shake');toast(mode==='c'?'Бұл түсті білдірмейді 🙅':'Бұл көзді сипаттамайды 🙅','bad');return}
+    sfx.stamp();s.classList.add('found');s.append(el('span','stamp '+(mode==='c'?'n':'k'),mode==='c'?'ТҮСІ':'КӨЗІ'));got[mode]++;meter();
+    const c=el('div','evc '+(mode==='c'?'n':'k'),`${s.textContent.replace(/ТҮСІ|КӨЗІ/,'')}`);c.style.setProperty('--r',rnd(-5,5)+'deg');ev.append(c);
+    if(got[mode]===need[mode]){if(mode==='c'){mode='e';ev.append(el('div','evsep',''));setTimeout(()=>{toast('Түсі табылды! Енді көзі 👁','good');setMode()},500)}
+      else setTimeout(step3,700)}}
+  function step3(){if(RID!==id)return;lens.style.display='none';$('#rhint').textContent='';$('#rpaper').parentElement.style.display='none';
+    sentence($('#readtask'),ANS[1],'Мәтінге сүйеніп, сұраққа жауап жаз',()=>{DONE.add('read');finBox('#readfin',{icon:'📖',title:'Мәтін зерттелді!',text:'',err:E.n,again:startRead,extra:storyBox(ANS[1])})},E)}
+  setMode()}
 
-/* ================= 2. TOWN ================= */
-function startTown(){show('town');const id=RID;const T=$('#town');T.classList.remove('lit');$('#townfin').classList.remove('on');let err=0,placed=0;
-  const st=$('#stars');if(!st.children.length)for(let i=0;i<70;i++){const s=el('i');s.style.left=rnd(0,100)+'%';s.style.top=rnd(0,55)+'%';s.style.animationDelay=(Math.random()*1.6)+'s';st.append(s)}
-  const items=shuffle([...pick(KIM,6).map(x=>[...x,'k']),...pick(NE,6).map(x=>[...x,'n'])]);
-  const H=$('#houses');H.innerHTML='';const HS={};
-  [['k','Кім? үйі','#e8483f','#ffe0c2'],['n','Не? үйі','#2f6fe4','#d7e6ff']].forEach(([k,t,c,w])=>{const h=el('div','house',`<div class="chim"></div><div class="smoke">💨</div><div class="roof" style="--c:${c}"><b>${t}</b></div><div class="hbody" style="--w:${w}">${'<div class="win"><span class="we"></span><span class="ww"></span></div>'.repeat(6)}<div class="door"></div></div>`);
-    h.dataset.k=k;HS[k]=h;H.append(h);tapTarget(h,(t,c)=>drop(t,c))});
-  const tray=$('#tray');tray.innerHTML='';
-  items.forEach(([e,w,k])=>{const c=el('div','card',`<span class="e">${e}</span>${w}`);c.dataset.k=k;c.dataset.e=e;c.dataset.w=w;tray.append(c);draggable(c,()=>Object.values(HS),t=>drop(t,c))});
-  const upd=()=>$('#towncnt').textContent=`${placed} / 12`;upd();
-  function drop(h,c){if(c.dataset.off)return;if(h.dataset.k!==c.dataset.k){err++;sfx.bad();re(h,'shake');re(c,'shake');toast('🦉 Уһу! Бұл үй емес…','bad');return}
-    const w=[...h.querySelectorAll('.win')].find(x=>!x.classList.contains('on'));if(!w)return;c.dataset.off=1;
-    w.querySelector('.we').textContent=c.dataset.e;w.querySelector('.ww').textContent=c.dataset.w;w.classList.add('on');sfx.ok();c.remove();placed++;upd();
-    if(placed===12){DONE.add('town');setTimeout(()=>{if(RID!==id)return;T.classList.add('lit');sfx.win();setTimeout(()=>{if(RID===id)finBox('#townfin',{icon:'🌃',title:'Қалашық жанданды!',text:'Барлық терезеде шам жанды. «Кім?» үйінде – адамдар, «Не?» үйінде – заттар мен жануарлар.',err,again:startTown})},2200)},500)}}}
+/* ================= лашын суреті (бөліктері бар) ================= */
+function birdParts(fill){const F=k=>fill?`fill="${fill[k]}"`:'fill="#ffffff"';return `<svg viewBox="0 0 560 420">
+  <path class="part" data-p="tail" ${F('tail')} stroke="#3e2723" stroke-width="5" d="M140 300 L40 370 L62 380 L50 405 L130 360 L165 330Z"/>
+  <ellipse class="part" data-p="back" ${F('back')} stroke="#3e2723" stroke-width="5" cx="255" cy="250" rx="140" ry="92"/>
+  <path class="part" data-p="breast" ${F('breast')} stroke="#3e2723" stroke-width="4" d="M300 230 q90 10 90 70 q-30 50 -120 40 q-40 -60 30 -110z"/>
+  <path class="part" data-p="wing" ${F('wing')} stroke="#3e2723" stroke-width="5" d="M150 230 q80 -70 200 -20 q-40 70 -140 80 q-50 0 -60 -60z"/>
+  <path class="part" data-p="legs" ${F('legs')} stroke="#3e2723" stroke-width="4" d="M225 330 h16 v40 h-16z M290 330 h16 v40 h-16z"/>
+  <path class="part" data-p="legs" ${F('legs')} stroke="#3e2723" stroke-width="4" d="M210 372 h46 l-6 10 h-34z M275 372 h46 l-6 10 h-34z"/>
+  <circle class="part" data-p="head" ${F('head')} stroke="#3e2723" stroke-width="5" cx="392" cy="165" r="64"/>
+  <path class="part" data-p="beak" ${F('beak')} stroke="#3e2723" stroke-width="4" d="M448 152 q44 6 50 34 q-14 -6 -28 -2 q-6 16 -22 18z"/>
+  <circle cx="418" cy="150" r="17" fill="#fff" stroke="#3e2723" stroke-width="4"/><circle cx="422" cy="150" r="8" fill="#111"/>
+  <rect x="170" y="388" width="230" height="14" rx="7" fill="#6d4c41"/></svg>`}
+const NATURAL={tail:'#7d8fa3',back:'#7d8fa3',breast:'#f5f0e6',wing:'#5f7085',legs:'#f6c400',head:'#2f3640',beak:'#f6c400'};
 
-/* ================= 3. DETECTIVE ================= */
-const TEXTS=[{t:'Бақта',s:'*Айша/k *баққа/n барды. *Бақта/n *алма/n *ағашы/n өсіп тұр. *Атасы/k *алма/n терді. *Айша/k *себет/n әкелді. Олар *алмаларды/n *себетке/n салды.'},
- {t:'Ауруханада',s:'*Дәрігер/k *ауруханада/n *жұмыс/n істейді. Ол *балаларды/k емдейді. *Медбике/k *дәрі/n береді. *Ауруханада/n әдемі *гүлдер/n бар.'},
- {t:'Асханада',s:'*Аспаз/k *асханада/n *тамақ/n пісірді. Ол *қазанға/n *ет/n салды. *Балалар/k *нан/n мен *шай/n ішті. *Мысық/n *терезеде/n ұйықтады.'},
- {t:'Сыныпта',s:'*Мұғалім/k *сыныпқа/n кірді. *Оқушылар/k *кітап/n ашты. *Әнші/k *ән/n айтты. *Бала/k *доп/n пен *қаламды/n алды.'}];
-let detIdx=0;
-function startDet(i){if(typeof i==='number')detIdx=i;show('det');const id=RID;$('#detfin').classList.remove('on');const tabs=$('#tabs');tabs.innerHTML='';
-  TEXTS.forEach((T,k)=>{const b=el('button','tab'+(k===detIdx?' on':''),`№${k+1} ${T.t}`);b.onclick=()=>startDet(k);tabs.append(b)});
-  const P=$('#ptext');P.innerHTML='';const ev=$('#ev');ev.innerHTML='';let err=0,found=0;const T=TEXTS[detIdx];let total=0;
-  T.s.split(' ').forEach(tok=>{const m=tok.match(/^\*([^/]+)\/(k|n)(.*)$/);let w,k=null,tail='';if(m){w=m[1];k=m[2];tail=m[3];total++}else{const mm=tok.match(/^(.+?)([.,!?]*)$/);w=mm[1];tail=mm[2]}
-    const s=el('span','wd',w);if(k)s.dataset.k=k;s.onclick=ev2=>clickW(s,ev2);P.append(s);if(tail)P.append(tail);P.append(' ')});
-  const meter=()=>$('#meter').innerHTML=`Табылды: ${found} / ${total}<div class="barx"><i style="width:${found/total*100}%"></i></div>`;meter();
-  const paper=$('#paper'),lens=$('#lens');paper.onpointermove=e=>{if(innerWidth<=820)return;lens.style.display='block';lens.style.left=e.clientX+'px';lens.style.top=e.clientY+'px'};paper.onpointerleave=()=>lens.style.display='none';
-  let askEl=null;const closeAsk=()=>{askEl&&askEl.remove();askEl=null};
-  function clickW(s){if(s.classList.contains('found'))return;closeAsk();
-    if(!s.dataset.k){err++;sfx.bad();re(s,'shake');toast('Бұл зат есім емес 🙅','bad');return}
-    sfx.tap();askEl=el('div','ask','<button class="k">Кім?</button><button class="n">Не?</button>');const r=s.getBoundingClientRect(),pr=$('#det').getBoundingClientRect();
-    askEl.style.left=(r.left+r.width/2-pr.left)+'px';askEl.style.top=(r.bottom-pr.top)+'px';$('#det').append(askEl);
-    askEl.querySelectorAll('button').forEach(b=>b.onclick=e=>{e.stopPropagation();const k=b.className;if(k!==s.dataset.k){err++;sfx.bad();re(askEl,'shake');toast(s.dataset.k==='k'?'Ол – адам. Кім?':'Ол – зат. Не?','bad');return}
-      closeAsk();sfx.stamp();s.classList.add('found');s.append(el('span','stamp '+k,k==='k'?'КІМ?':'НЕ?'));found++;meter();
-      const c=el('div','evc '+k,`${s.firstChild.textContent}<i>${k==='k'?'кім?':'не?'}</i>`);c.style.setProperty('--r',rnd(-5,5)+'deg');ev.append(c);
-      if(found===total){DONE.add('det');setTimeout(()=>{if(RID===id)finBox('#detfin',{icon:'🕵️',title:'Іс ашылды!',text:`Мәтіндегі ${total} зат есімнің бәрі табылды!`,err,again:()=>startDet(detIdx),extra:detIdx<3?'<p style="margin-top:-8px">Келесі мәтінге көшуге болады 👉</p>':''})},700)}})}
-  $('#det').onclick=e=>{if(askEl&&!askEl.contains(e.target)&&!e.target.classList.contains('wd'))closeAsk()}}
+/* ================= E · 3-сұрақ ================= */
+const PARTS=[['beak','Тұмсығы – қысқа, имек',84,38],['eye','Көзі – үлкен, өткір',75,34],['wing','Қанаты – ұзын, күшті',44,52],['tail','Құйрығы – ұзын',14,86],['claw','Тырнақтары – өткір, мықты',47,93]];
+function startEng(){show('eng');const id=RID;$('#engfin').classList.remove('on');const E={n:0};let done=0;$('#engtask').style.display='none';$('#bp').parentElement.style.display='';
+  const bp=$('#bp');bp.innerHTML=birdParts(NATURAL);const tray=$('#engtray');tray.innerHTML='';
+  PARTS.forEach(([k,t,x,y],i)=>{const h=el('div','hot',`<span>${i+1}</span>`);h.dataset.k=k;h.style.left=x+'%';h.style.top=y+'%';bp.append(h);tapTarget(h,(t,c)=>drop(t,c))});
+  shuffle(PARTS).forEach(([k,t])=>{const c=el('div','card',`<span>${lrColor(t)}</span>`);c.dataset.k=k;tray.append(c);draggable(c,()=>[...bp.querySelectorAll('.hot:not(.ok)')],t=>drop(t,c))});
+  const upd=()=>$('#engcnt').textContent=`${done} / 5`;upd();
+  function drop(h,c){if(c.dataset.off||h.classList.contains('ok'))return;if(h.dataset.k!==c.dataset.k){E.n++;sfx.bad();re(h,'shake');re(c,'shake');toast('Бұл мүше емес 🔧','bad');return}
+    c.dataset.off=1;sfx.ok();h.classList.add('ok');h.innerHTML=`<em>${c.innerHTML}</em>`;c.remove();done++;upd();if(done===5)setTimeout(step2,800)}
+  function step2(){if(RID!==id)return;$('#bp').parentElement.style.display='none';
+    sentence($('#engtask'),ANS[2],'Сызбаға қарап, сұраққа жауап жаз',()=>{DONE.add('eng');finBox('#engfin',{icon:'🛠️',title:'Лашынның сызбасы дайын!',text:'',err:E.n,again:startEng,extra:storyBox(ANS[2])})},E)}}
 
-/* ================= 4. SCALE ================= */
+/* ================= A · 4-сұрақ ================= */
+const ACOL=[['көкшіл-сұр','#7d8fa3'],['ақшыл','#f5f0e6'],['қара','#2f3640'],['сары','#f6c400'],['қоңыр','#8d6e63'],['жасыл','#66bb6a'],['қызыл','#ef5350']];
+const NEEDC={back:'көкшіл-сұр',wing:'көкшіл-сұр',tail:'көкшіл-сұр',breast:'ақшыл',head:'қара',beak:'сары',legs:'сары'};
+const PNAME={back:'арқасы',wing:'қанаты',tail:'құйрығы',breast:'төсі',head:'басы',beak:'тұмсығы',legs:'аяқтары'};
+const PREY=[['🐭','тышқан',1],['🐦','торғай',1],['🕊️','көгершін',1],['🦆','үйрек',1],['🦎','кесіртке',1],['🌿','шөп',0],['🍎','алма',0],['🌾','дән',0],['🌸','гүл',0]];
+function startArt(){show('artf');const id=RID;$('#artfin').classList.remove('on');const E={n:0};$('#arttask').style.display='none';const row=$('#artrow');row.style.display='';
+  $('#artstep').textContent='1-қадам: мәтін бойынша боя';
+  row.innerHTML=`<div class="artcard"><div class="desc"><b>📜 Лашынды боя:</b> Арқасы, қанаты, құйрығы – <i>көкшіл-сұр</i>. Төсі – <i>ақшыл</i>. Басы – <i>қара</i>. Тұмсығы мен аяқтары – <i>сары</i>.</div><div class="canvasbird" id="cbird">${birdParts(null)}</div><button class="chip go" id="acheck">✅ Тексеру</button></div><div class="palette2" id="pal2"></div>`;
+  let col=ACOL[0];const pal=$('#pal2');ACOL.forEach((c,k)=>{const b=el('button',k?'':'on',`<i style="background:${c[1]}"></i>${c[0]}`);b.onclick=()=>{col=c;pal.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));sfx.tap()};pal.append(b)});
+  const painted={};$('#cbird').querySelectorAll('.part').forEach(p=>p.addEventListener('click',()=>{const k=p.dataset.p;$('#cbird').querySelectorAll(`.part[data-p="${k}"]`).forEach(x=>x.setAttribute('fill',col[1]));painted[k]=col[0];sfx.pour()}));
+  $('#acheck').onclick=()=>{const bad=Object.keys(NEEDC).filter(k=>painted[k]!==NEEDC[k]);
+    if(bad.length){E.n++;sfx.bad();bad.forEach(k=>$('#cbird').querySelectorAll(`.part[data-p="${k}"]`).forEach(x=>{x.classList.remove('blink');void x.getBBox();x.classList.add('blink')}));toast('Тексер: '+bad.map(k=>PNAME[k]).join(', '),'bad');return}
+    sfx.ok();toast('Мәтін бойынша дұрыс боялды! 🎨','good');setTimeout(step2,800)};
+  function step2(){if(RID!==id)return;$('#artstep').textContent='2-қадам: лашынның олжасы';const bird=$('#cbird').innerHTML;let got=0;
+    row.innerHTML=`<div class="artcard"><div class="desc"><b>🍽 Лашын немен қоректенеді?</b> Тек лашынның олжасын ұяға апар!</div><div class="nest" id="nest"><div class="canvasbird small">${bird}</div><div class="nestin" id="nestin"></div><div class="nestlbl">Лашынның олжасы</div></div></div><div class="preytray" id="ptray"></div>`;
+    const nest=$('#nest'),tray=$('#ptray');
+    shuffle(PREY).forEach(([e,w,k])=>{const c=el('div','card',`<span class="e">${e}</span>${w}`);c.dataset.k=k;tray.append(c);draggable(c,()=>[nest],()=>drop(c))});tapTarget(nest,(t,c)=>drop(c));
+    function drop(c){if(c.dataset.off)return;if(c.dataset.k!=='1'){E.n++;sfx.bad();re(c,'shake');re(nest,'shake');toast('Лашын мұны жемейді! 🙅','bad');return}
+      c.dataset.off=1;sfx.ok();$('#nestin').append(el('span','',c.querySelector('.e').textContent));c.remove();got++;if(got===5)setTimeout(step3,800)}}
+  function step3(){if(RID!==id)return;$('#artstep').textContent='3-қадам: жауап жаз';row.style.display='none';
+    sentence($('#arttask'),ANS[3],'Енді сұраққа жауап жаз',()=>{DONE.add('artf');finBox('#artfin',{icon:'🎨',title:'Тамаша жұмыс!',text:'Лашын ұсақ құстар мен тышқандарды аулайды – сондықтан ол жыртқыш құс.',err:E.n,again:startArt,extra:storyBox(ANS[3])})},E)}}
+
+/* ================= M · Л мен Р таразысы (ойын) ================= */
+const LW=['лашын','лағыл','лебіз','Іле','ілгіш','ілесу','ылди','ылғал','ілгек','ылғи','алма','бала','қалам','көл','гүл','күлкі','белбеу','ұлпа','жол','тал'];
+const RW=['рақмет','рақат','рең','рақым','ірі','ірімшік','ырыс','бүркіт','арыстан','қарға','торғай','шырша','сүрек','терек','ара','ерік','қияр','сары','жүрек','бөрік'];
 function startScale(){show('scale');const id=RID;$('#sclfin').classList.remove('on');let err=0,round=0;const R=5;
   const scl=$('#scl');scl.querySelectorAll('.pan').forEach(p=>p.remove());
-  const pans=[['k','«Кім?» үйі','#e8483f'],['n','«Не?» үйі','#2f6fe4']].map(([k,t,c])=>{const p=el('div','pan',`<div class="strings"></div><div class="dish"></div><div class="lbl">${t}</div>`);p.style.setProperty('--c',c);scl.append(p);return p});
-  function place(a){const W=scl.clientWidth,Hh=scl.clientHeight,cx=W/2,cy=Hh*.18+9,L=W*.37,r=a*Math.PI/180;
-    $('#beam').style.transform=`rotate(${a}deg)`;
+  const pans=[['L','Л әрпі бар сөздер','#8e44ad'],['R','Р әрпі бар сөздер','#e67e22']].map(([k,t,c])=>{const p=el('div','pan',`<div class="strings"></div><div class="dish"></div><div class="lbl">${t}</div>`);p.style.setProperty('--c',c);scl.append(p);return p});
+  function place(a){const W=scl.clientWidth,Hh=scl.clientHeight,cx=W/2,cy=Hh*.18+9,L=W*.37,r=a*Math.PI/180;$('#beam').style.transform=`rotate(${a}deg)`;
     [[-1,pans[0]],[1,pans[1]]].forEach(([s,p])=>{p.style.left=(cx+s*L*Math.cos(r))+'px';p.style.top=(cy+s*L*Math.sin(r))+'px'})}
   const drawR=()=>{$('#rounds').innerHTML=Array.from({length:R},(_,i)=>`<i class="${i<round?'d':i===round?'c':''}"></i>`).join('')};
   function newRound(){if(RID!==id)return;if(round>=R){DONE.add('scale');return finBox('#sclfin',{icon:'⚖️',title:'Таразы теңелді!',text:`${R} раундтың бәрі шешілді!`,err,again:startScale})}
-    drawR();let a,b;do{a=rnd(3,12);b=rnd(3,12)}while(a===b);
-    pans.forEach(p=>p.querySelector('.dish').innerHTML='');place(0);
-    const ws=[pick(KIM,a).map(x=>x[1]),pick(NE,b).map(x=>x[1])];
-    ws.forEach((L,s)=>L.forEach((w,j)=>setTimeout(()=>{if(RID!==id)return;const c=el('span','wchip',w);pans[s].querySelector('.dish').append(c);sfx.tap()},j*120+s*60)));
+    drawR();let a,b;do{a=rnd(3,11);b=rnd(3,11)}while(a===b);pans.forEach(p=>p.querySelector('.dish').innerHTML='');place(0);
+    [pick(LW,a),pick(RW,b)].forEach((L,s)=>L.forEach((w,j)=>setTimeout(()=>{if(RID!==id)return;pans[s].querySelector('.dish').append(el('span','wchip',lrColor(w)));sfx.tap()},j*120+s*60)));
     setTimeout(()=>{if(RID===id)place(Math.max(-16,Math.min(16,(b-a)*3)))},Math.max(a,b)*120+200);
-    const Q=[{t:'Қай табақта сөз көп?',ch:[['«Кім?» үйінде','#e8483f',a>b],['«Не?» үйінде','#2f6fe4',b>a]]},{t:`«Кім?» үйінде ${a} сөз, «Не?» үйінде ${b} сөз. Қаншаға артық?`,ans:Math.abs(a-b),ex:`${Math.max(a,b)} − ${Math.min(a,b)} =`},{t:'Барлығы неше сөз?',ans:a+b,ex:`${a} + ${b} =`}];
+    const Q=[{t:'Қай табақта сөз көп?',ch:[['Л табағында','#8e44ad',a>b],['Р табағында','#e67e22',b>a]]},{t:`Л табағында ${a} сөз, Р табағында ${b} сөз. Қаншаға артық?`,ans:Math.abs(a-b),ex:`${Math.max(a,b)} − ${Math.min(a,b)} =`},{t:'Екі табақта барлығы неше сөз?',ans:a+b,ex:`${a} + ${b} =`}];
     let q=0;const P=$('#qpanel');
     function ask(){if(RID!==id)return;P.innerHTML='';const Qq=Q[q];P.append(el('div','qtext',Qq.t));
       if(Qq.ch){const c=el('div','choices');Qq.ch.forEach(([t,col,ok])=>{const b=el('button','',t);b.style.setProperty('--c',col);b.onclick=()=>{if(ok){sfx.ok();toast('Дұрыс! 👍','good');q++;setTimeout(ask,600)}else{err++;sfx.bad();re(b,'shake')}};c.append(b)});P.append(c);return}
@@ -649,7 +683,7 @@ function startScale(){show('scale');const id=RID;$('#sclfin').classList.remove('
       function press(k){if(k==='⌫')v=v.slice(0,-1);else if(k==='✓'){if(!v)return;if(+v===Qq.ans){box.classList.add('ok');sfx.ok();toast('Дұрыс! 👍','good');q++;setTimeout(()=>q<Q.length?ask():(round++,newRound()),800)}else{err++;sfx.bad();re(box,'shake');v=''}}else if(v.length<2)v+=k;box.textContent=v;sfx.tap()}
       document.onkeydown=e=>{if(!$('#scale').classList.contains('on')||!document.body.contains(pad))return;if(/^\d$/.test(e.key))press(+e.key);else if(e.key==='Backspace')press('⌫');else if(e.key==='Enter')press('✓')}}
     ask()}
-  addEventListener('resize',()=>{});newRound()}
+  newRound()}
 
 /* ================= 5. FALCON ================= */
 const TEAMS0=[{n:'Сұңқар',i:'🦅',c:'#e8483f'},{n:'Қыран',i:'🦉',c:'#2f6fe4'},{n:'Тұйғын',i:'🐦',c:'#2fae5b'},{n:'Ителгі',i:'🕊️',c:'#9b59b6'}];
@@ -658,7 +692,7 @@ const MEAN=[['Іле','Қазақстандағы үлкен өзеннің ат
  ['лашын','жыртқыш құс'],['лебіз','айтылған жылы сөз, тілек'],['лағыл','қызыл түсті асыл тас'],['рақым','мейірім, жақсылық']];
 const LR=['лашын','лағыл','лебіз','рақмет','рақат','рақым','ілгіш','ілесу','ірімшік','ылғал','ілгек','ілгері','ырыс','қарлығаш','ерлік','құрылыс','балалар','жолбарыс','бүркіт','ормандағы','жарлылар','сырғалар','ұлпалар','шырылдады'];
 const QS=[{q:'1. Лашын қандай құс?',w:['Лашын','–','жылдам','ұшатын','жыртқыш','құс.'],x:['құстар','жыртқыштар','лашынның','баяу'],ok:[['Лашын','–','жылдам','ұшатын','жыртқыш','құс.']]},
- {q:'2. Оның түсі, көзі қандай?',w:['Лашынның','түсі','қоңыр,','көзі','өткір.'],x:['түстері','көздері','жасыл','Лашын']},
+ {q:'2. Оның түсі, көзі қандай?',w:['Лашынның','түсі','көкшіл-сұр,','көзі','өткір.'],x:['түстері','көздері','жасыл','Лашын']},
  {q:'3. Ал тырнақтары қандай?',w:['Оның','тырнақтары','өткір','әрі','мықты.'],x:['тырнақ','өткірі','жұмсақ','Ол']},
  {q:'4. Оны неліктен жыртқыш құс деп атайды?',w:['Себебі','ол','ұсақ','құстар','мен','тышқандарды','аулайды.'],x:['тышқандар','құсты','аулады','шөп']}];
 QS.forEach(Q=>{Q.ok=Q.ok||[Q.w]});
